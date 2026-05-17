@@ -1,14 +1,35 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
-import Signup from './pages/SignupPage';
+import SignupPage from './pages/SignupPage';
+import LoginPage from './pages/LoginPage';
 import ComponentLibraryDemo from './ui/ComponentLibraryDemo';
+
+function PageTitleManager() {
+  const location = useLocation();
+
+  useEffect(() => {
+    const titles = {
+      '/': 'Quiz Master',
+      '/registration': 'Registration | Quiz Master',
+      '/login': 'Student Login | Quiz Master',
+      '/demo': 'Component Demo | Quiz Master',
+    };
+
+    document.title = titles[location.pathname] ?? 'Quiz Master';
+  }, [location.pathname]);
+
+  return null;
+}
 
 function App() {
   return (
     <Router>
+      <PageTitleManager />
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/registration" element={<Signup />} />
+        <Route path="/registration" element={<SignupPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/demo" element={<ComponentLibraryDemo />} />
       </Routes>
     </Router>
