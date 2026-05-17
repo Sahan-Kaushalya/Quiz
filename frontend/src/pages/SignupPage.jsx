@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import logoicon from '../assets/icons/logo.png';
 
-function Field({ label, id, icon: Icon, type = 'text', placeholder, children }) {
+function Field({ label, id, icon: Icon, type = 'text', placeholder, error = '', value, onChange, children }) {
   return (
     <div className="space-y-2">
       <label htmlFor={id} className="block text-sm font-bold text-on-surface">
@@ -34,15 +34,24 @@ function Field({ label, id, icon: Icon, type = 'text', placeholder, children }) 
             name={id}
             type={type}
             placeholder={placeholder}
-            className="h-12 w-full rounded-full border border-outline-variant bg-surface-container-low px-4 pl-12 pr-4 text-sm text-on-surface shadow-[0_1px_0_rgba(255,255,255,0.7)_inset] outline-none transition focus:border-primary focus:ring-4 focus:ring-primary-fixed/60"
+            value={value}
+            onChange={onChange}
+            aria-invalid={Boolean(error)}
+            aria-describedby={error ? `${id}-error` : undefined}
+            className={`h-12 w-full rounded-full border bg-surface-container-low px-4 pl-12 pr-4 text-sm text-on-surface shadow-[0_1px_0_rgba(255,255,255,0.7)_inset] outline-none transition focus:border-primary focus:ring-4 focus:ring-primary-fixed/60 ${error ? 'border-error focus:ring-error/20' : 'border-outline-variant'}`}
           />
         )}
       </div>
+      {error ? (
+        <p id={`${id}-error`} className="px-1 text-xs font-semibold text-error">
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }
 
-function PasswordField({ label, id, placeholder, value, onChange }) {
+function PasswordField({ label, id, placeholder, value, onChange, error = '' }) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -61,6 +70,8 @@ function PasswordField({ label, id, placeholder, value, onChange }) {
           placeholder={placeholder}
           value={value}
           onChange={onChange}
+          aria-invalid={Boolean(error)}
+          aria-describedby={error ? `${id}-error` : undefined}
           className="h-12 w-full rounded-full border border-outline-variant bg-surface-container-low px-4 pl-12 pr-14 text-sm text-on-surface shadow-[0_1px_0_rgba(255,255,255,0.7)_inset] outline-none transition focus:border-primary focus:ring-4 focus:ring-primary-fixed/60"
         />
         <button
@@ -72,6 +83,11 @@ function PasswordField({ label, id, placeholder, value, onChange }) {
           {showPassword ? <EyeOff size={18} strokeWidth={2} /> : <Eye size={18} strokeWidth={2} />}
         </button>
       </div>
+      {error ? (
+        <p id={`${id}-error`} className="px-1 text-xs font-semibold text-error">
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }
@@ -112,7 +128,7 @@ function ConfirmPasswordField({ label, id, placeholder, value, onChange }) {
 
 function getPasswordChecks(password) {
   return {
-    length: password.length > 5,
+    length: password.length > 5 && password.length < 12,
     number: /\d/.test(password),
     uppercase: /[A-Z]/.test(password),
   };
@@ -121,11 +137,19 @@ function getPasswordChecks(password) {
 export default function SignupPage() {
   const navigate = useNavigate();
   const [values, setValues] = useState({
+    username: '',
     password: '',
     confirmPassword: '',
   });
+  const [errors, setErrors] = useState({
+    username: '',
+  });
 
   const passwordChecks = getPasswordChecks(values.password);
+  const passwordLengthError =
+    values.password.length > 0 && (values.password.length <= 5 || values.password.length >= 12)
+      ? 'Password must be between 6 and 11 characters.'
+      : '';
   const passwordsMatch = values.confirmPassword.length > 0 && values.password === values.confirmPassword;
 
   const handleChange = (event) => {
@@ -135,6 +159,13 @@ export default function SignupPage() {
       ...current,
       [name]: value,
     }));
+
+    if (name === 'username') {
+      setErrors((current) => ({
+        ...current,
+        username: '',
+      }));
+    }
   };
 
   return (
@@ -187,9 +218,17 @@ export default function SignupPage() {
             </div>
 
             <form className="space-y-5">
-              <Field label="Full Name" id="fullName" icon={UserRound} placeholder="e.g. Alex Student" />
+              <Field label="Full Name" id="fullName" icon={UserRound} placeholder="e.g. Mudeesha Deshan" />
 
-              <Field label="Username" id="username" icon={UserRound} placeholder="Pick a fun name!" />
+              <Field
+                label="Username"
+                id="username"
+                icon={UserRound}
+                placeholder="Pick a fun name!"
+                value={values.username}
+                onChange={handleChange}
+                error={errors.username}
+              />
 
               <Field label="Email Address" id="email" icon={Mail} type="email" placeholder="parent@email.com" />
 
@@ -201,6 +240,7 @@ export default function SignupPage() {
                     placeholder="Secret code"
                     value={values.password}
                     onChange={handleChange}
+                    error={passwordLengthError}
                   />
                   <div className="px-2 py-2 space-y-1 font-semibold border text-[8px] rounded-sm border-outline-variant bg-surface-container-low text-on-surface-variant">
                     <p className={passwordChecks.length ? 'text-tertiary text-xs font-semibold' : 'text-error text-xs font-semibold'}>
@@ -255,7 +295,7 @@ export default function SignupPage() {
                     </span>
                   </div>
                 </Field>
-              <Field label="School Name" id="schoolName" icon={Building2} placeholder="Enter your school" />
+              <Field label="School Name" id="schoolName" icon={Building2} placeholder="e.g. Kirindiwela Central College" />
 
               <button
                 type="button"
@@ -268,7 +308,7 @@ export default function SignupPage() {
 
             <p className="relative z-10 mt-8 text-sm font-medium text-center text-on-surface-variant">
               Already have an account?{' '}
-              <a href="#" className="font-extrabold underline transition text-primary decoration-primary/40 underline-offset-4 hover:text-primary-container">
+              <a href="/login" className="font-extrabold underline transition text-primary decoration-primary/40 underline-offset-4 hover:text-primary-container">
                 Log In here
               </a>
             </p>
