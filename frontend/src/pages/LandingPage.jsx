@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef } from "react";
-import {
+﻿import { useState, useEffect, useRef } from "react";import { useNavigate } from "react-router-dom";import {
   LogIn, UserPlus, Trophy, ChevronLeft, ChevronRight,
   Calculator, Globe, Leaf, Brain, Zap, FileText,
   Quote, ArrowRight, Mail, Phone, MapPin, Check, Star, Award ,
@@ -11,6 +10,7 @@ import aimimg from "../assets/images/Learning-cuate.png";
 import books from "../assets/images/books.png";
 import exam from "../assets/images/exam.png";
 import prize from "../assets/images/prize.png";
+import Footer from '../ui/Footer';
 
 const SLIDES = [
   {
@@ -204,7 +204,7 @@ function PageBackground() {
       <div className="absolute bottom-[-5%] left-[30%] h-100 w-100 rounded-full bg-emerald-200 opacity-20 blur-[80px]" />
       <div className="absolute right-[20%] top-[40%] h-80 w-80 rounded-full bg-orange-100 opacity-30 blur-[80px]" />
 
-      {/* Decorative icons — Stars (amber outline) */}
+      {/* Decorative icons ΓÇö Stars (amber outline) */}
       <Star
         size={60}
         strokeWidth={1.5}
@@ -242,7 +242,7 @@ function PageBackground() {
         fill="none"
       />
 
-      {/* Decorative icons — Book (lavender/purple) */}
+      {/* Decorative icons ΓÇö Book (lavender/purple) */}
       <BookOpen
         size={70}
         strokeWidth={1.2}
@@ -256,7 +256,7 @@ function PageBackground() {
         fill="none"
       />
 
-      {/* Decorative icons — Diamond/Gem (green) */}
+      {/* Decorative icons ΓÇö Diamond/Gem (green) */}
       <Diamond
         size={50}
         strokeWidth={1.2}
@@ -367,7 +367,6 @@ function TestimonialCarousel() {
   const [current, setCurrent] = useState(0);
   const [sliding, setSliding] = useState(false);
   const timerRef = useRef(null);
-  const VISIBLE = 3; // show 3 at a time on desktop, 1 on mobile
 
   const go = (idx) => {
     if (sliding) return;
@@ -462,6 +461,8 @@ function TestimonialCarousel() {
 
 
 export default function LandingPage() {
+  const navigate = useNavigate();
+  
   return (
     <div className="relative min-h-screen antialiased text-gray-800">
       <PageBackground />
@@ -469,7 +470,7 @@ export default function LandingPage() {
       {/* All content above the fixed bg */}
       <div className="relative z-10">
 
-        {/* ── HEADER ── */}
+        {/* HEADER */}
         <header className="sticky top-0 z-50 w-full border-b shadow-sm border-white/60 bg-white/75 backdrop-blur-xl">
           <div className="flex items-center justify-between max-w-6xl px-5 py-3 mx-auto md:px-10">
             <div className="flex items-center gap-3">
@@ -486,14 +487,14 @@ export default function LandingPage() {
               <button className="flex h-10 min-w-25 items-center justify-center gap-2 rounded-full bg-amber-500 px-5 text-sm font-extrabold text-white shadow-[0_4px_0_0_#b45309] transition-all hover:translate-y-0.5 hover:shadow-[0_2px_0_0_#b45309] active:translate-y-1 active:shadow-none">
                 <LogIn size={15} /> Login
               </button>
-              <button className="flex items-center justify-center h-10 gap-2 px-5 text-sm font-extrabold text-indigo-700 transition-all border-2 border-indigo-600 rounded-full shadow-sm min-w-25 bg-white/80 backdrop-blur-sm hover:bg-indigo-50">
+              <button onClick={() => navigate('/registration')} className="flex items-center justify-center h-10 gap-2 px-5 text-sm font-extrabold text-indigo-700 transition-all border-2 border-indigo-600 rounded-full shadow-sm min-w-25 bg-white/80 backdrop-blur-sm hover:bg-indigo-50">
                 <UserPlus size={15} /> Register
               </button>
             </div>
           </div>
         </header>
 
-        {/* ── HERO ── */}
+        {/* HERO */}
         <section className="max-w-6xl px-5 pt-12 mx-auto pb-14 md:px-10 md:pb-20 md:pt-16">
           <div className="grid gap-10 md:grid-cols-2 md:items-center">
             <div className="text-center md:text-left">
@@ -504,7 +505,7 @@ export default function LandingPage() {
                 Quiz Master
               </h1>
               <h2 className="mb-4 text-2xl font-bold text-amber-600 md:text-3xl">
-                ශිෂ්‍යත්ව ජය මග
+                 ශිෂ්‍යත්ව ජය මග
               </h2>
               <p className="mb-8 text-lg leading-relaxed text-gray-500">
                 The fun way to practice for your scholarship exam!
@@ -513,7 +514,7 @@ export default function LandingPage() {
                 <button className="flex items-center justify-center gap-2 rounded-full bg-amber-500 px-8 py-3.5 text-base font-extrabold text-white shadow-[0_5px_0_0_#b45309] transition-all hover:translate-y-0.5 hover:shadow-[0_3px_0_0_#b45309] active:translate-y-1 active:shadow-none">
                   <LogIn size={18} /> Login
                 </button>
-                <button className="flex items-center justify-center gap-2 rounded-full border-2 border-indigo-600 bg-white/70 px-8 py-3.5 text-base font-extrabold text-indigo-700 backdrop-blur-sm transition-all hover:bg-white hover:shadow-md">
+                <button onClick={() => navigate('/registration')} className="flex items-center justify-center gap-2 rounded-full border-2 border-indigo-600 bg-white/70 px-8 py-3.5 text-base font-extrabold text-indigo-700 backdrop-blur-sm transition-all hover:bg-white hover:shadow-md">
                   <UserPlus size={18} /> Register
                 </button>
               </div>
@@ -548,7 +549,7 @@ export default function LandingPage() {
         </div>
         </section>
 
-        {/* ── FEATURED SUBJECTS ── */}
+        {/*FEATURED SUBJECTS*/}
         <section className="py-20">
           <div className="max-w-6xl px-5 mx-auto md:px-10">
             <div className="mb-12 text-center">
@@ -591,7 +592,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ── WHY LEARN WITH US ── */}
+        {/*WHY LEARN WITH US */}
         <section className="py-20">
           <div className="max-w-6xl px-5 mx-auto md:px-10">
             <div className="mb-12 text-center">
@@ -667,7 +668,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ── TESTIMONIALS CAROUSEL ── */}
+        {/*TESTIMONIALS CAROUSEL*/}
         <section className="py-20">
           <div className="max-w-6xl px-5 mx-auto md:px-10">
             <div className="mb-12 text-center">
@@ -685,7 +686,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ── CTA BANNER ── */}
+        {/*CTA BANNER */}
         <section className="py-16">
           <div className="px-5 mx-auto md:px-10">
             <div className="relative p-10 overflow-hidden text-center text-white shadow-2xl rounded-3xl bg-linear-to-br from-indigo-600 to-purple-700 md:p-14">
@@ -701,7 +702,7 @@ export default function LandingPage() {
                 ශිෂ්‍යත්ව ජය මග — Join over 10,000 students already preparing smarter.
               </p>
               <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-                <button className="rounded-full bg-amber-400 px-8 py-3.5 text-base font-extrabold text-gray-900 shadow-[0_5px_0_0_#b45309] transition-all hover:translate-y-0.5 hover:shadow-[0_3px_0_0_#b45309] active:translate-y-1 active:shadow-none">
+                <button onClick={() => navigate('/registration')} className="rounded-full bg-amber-400 px-8 py-3.5 text-base font-extrabold text-gray-900 shadow-[0_5px_0_0_#b45309] transition-all hover:translate-y-0.5 hover:shadow-[0_3px_0_0_#b45309] active:translate-y-1 active:shadow-none">
                   Register Free
                 </button>
                 <button className="rounded-full border-2 border-white/40 bg-white/10 px-8 py-3.5 text-base font-extrabold text-white backdrop-blur-sm transition-all hover:bg-white/20">
@@ -712,7 +713,7 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ── FOOTER ── */}
+        {/*FOOTER*/}
         <footer className="border-t border-white/60 bg-white/70 backdrop-blur-xl">
           <div className="max-w-6xl px-5 py-12 mx-auto md:px-10">
             <div className="grid gap-10 md:grid-cols-4">
