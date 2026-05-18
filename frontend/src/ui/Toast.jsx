@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { CheckCircle, XCircle, Info, AlertTriangle } from 'lucide-react';
 
 export function Toast({ type = 'info', message = '', duration = 4000, onClose = () => {} }) {
   const [isVisible, setIsVisible] = useState(true);
@@ -26,17 +27,24 @@ export function Toast({ type = 'info', message = '', duration = 4000, onClose = 
     warning: 'toast-warning',
   }[type] || 'toast-info';
 
-  const icons = {
-    success: '✓',
-    error: '✕',
-    info: 'ℹ',
-    warning: '!',
-  };
+  const Icon = {
+    success: CheckCircle,
+    error: XCircle,
+    info: Info,
+    warning: AlertTriangle,
+  }[type] || Info;
+
+  const iconColorClass = {
+    success: 'text-green-500',
+    error: 'text-red-500',
+    info: 'text-blue-500',
+    warning: 'text-yellow-500',
+  }[type] || 'text-blue-500';
 
   return (
     <div className={`toast ${toastClass} animate-slide-up`}>
-      <span className="text-2xl font-bold">{icons[type]}</span>
-      <p className="text-body-md flex-1">{message}</p>
+      <Icon className={`w-6 h-6 ${iconColorClass}`} aria-hidden="true" />
+      <p className="flex-1 text-body-md">{message}</p>
     </div>
   );
 }
