@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import LandingPage from './pages/LandingPage';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
+import StudentDashboard from './pages/StudentDashboard';
 import ComponentLibraryDemo from './ui/ComponentLibraryDemo';
 
 function PageTitleManager() {
@@ -13,6 +14,7 @@ function PageTitleManager() {
       '/': 'Quiz Master',
       '/registration': 'Registration | Quiz Master',
       '/login': 'Student Login | Quiz Master',
+      '/dashboard': 'Dashboard | Quiz Master',
       '/demo': 'Component Demo | Quiz Master',
     };
 
@@ -30,6 +32,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/registration" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/dashboard" element={<StudentDashboard />} />
         <Route path="/demo" element={<ComponentLibraryDemo />} />
       </Routes>
     </Router>
