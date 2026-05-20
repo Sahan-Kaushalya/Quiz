@@ -1,20 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import {
   ArrowRight,
   Award,
   BookOpen,
   CheckCircle,
   ChevronDown,
-  Coins,
   FileText,
   Flame,
   FlaskConical,
   LayoutDashboard,
   Lightbulb,
   Lock,
-  Menu,
-  Search,
   Settings,
   Sigma,
   SlidersHorizontal,
@@ -22,20 +18,19 @@ import {
   Trees,
   Trophy,
   ChartNoAxesColumn ,
-  X,
   CircleStar,
   Map,
   CircleUser,
-  LogOut ,
+  Search,
 } from 'lucide-react';
-import logoicon from '../assets/icons/logo.png';
 import Footer from '../ui/Footer';
 import rankicon from '../assets/icons/rank.svg';
+import { StudentHeader, StudentSidebar } from '../ui';
 
 const NAV_ITEMS = [
   { label: 'Dashboard', icon: LayoutDashboard, active: true },
   { label: 'Quizzes', icon: BookOpen },
-  { label: 'Past Papers', icon: FileText },
+  { label: 'Past Papers', icon: FileText, to: '/past-papers' },
   { label: 'Adventure Map', icon: Map },
   { label: 'Leading', icon: ChartNoAxesColumn },
   { label: 'Profile', icon: CircleUser, to: '/profile' },
@@ -154,86 +149,13 @@ export default function StudentDashboard() {
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-surface text-on-surface font-body-md">
-      {sidebarOpen && <div className="fixed inset-0 z-40 bg-black/50 md:hidden" onClick={() => setSidebarOpen(false)} />}
-      <aside className={`fixed top-0 left-0 md:z-50 md:flex flex-col w-64 h-screen py-6 border-r bg-surface-container-low border-surface-container-highest transition-transform duration-300 z-50 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
-        <div className="px-6 mb-10">
-          <div className="flex items-center gap-3">
-            <img src={logoicon} alt="Quiz Master" className="w-8 h-8 rounded-lg" />
-            <h3 className="font-extrabold tracking-tight font-headline-md text-headline-md text-[#4a39e2]">
-              Quiz Master
-            </h3>
-          </div>
-        </div>
-
-        <nav className="space-y-1 grow">
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.label}
-              to={item.to || '#'}
-              onClick={() => setSidebarOpen(false)}
-              className={`mx-2 flex items-center gap-3 rounded-lg px-4 py-3 transition-all ${
-                item.active
-                  ? 'translate-x-1 bg-primary-container text-white shadow-sm'
-                  : 'text-[#4b5563] hover:bg-surface-container-highest'
-              }`}
-            >
-              <Glyph
-                icon={item.icon}
-                size={18}
-                strokeWidth={item.active ? 2.5 : 2.25}
-                className={item.active ? 'text-white' : 'text-[#4b5563]'}
-              />
-              <span className="font-label-lg text-label-lg">{item.label}</span>
-            </Link>
-          ))}
-        </nav>
-
-        <div className="p-4 mx-4 mt-auto mb-4 border rounded-lg border-outline-variant bg-surface-container-low">
-          <h3 className="flex items-center gap-2 mb-3 font-label-lg text-label-lg text-[#4a39e2]">
-            <Trophy size={18} strokeWidth={2.25} />
-            Global Rank
-          </h3>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-[#6b7280]">Your Position</span>
-            <span className="font-bold text-[#d27d00]">#42</span>
-          </div>
-          <div className="mt-2 space-y-2">
-            <div className="flex items-center gap-2 text-xs opacity-70">
-              <span className="flex items-center justify-center w-4 h-4 text-white rounded-full bg-secondary-container">1</span>
-              <span>Leo The Brave</span>
-            </div>
-            <div className="flex items-center gap-2 text-xs opacity-70">
-              <span className="flex items-center justify-center w-4 h-4 text-white rounded-full bg-slate-400">2</span>
-              <span>MathsWhiz2024</span>
-            </div>
-          </div>
-        </div>
-      </aside>
+      <StudentSidebar items={NAV_ITEMS} open={sidebarOpen} onClose={() => setSidebarOpen(false)} rankLabel="#42" />
 
       <main className="min-h-screen pb-12 ml-0 md:ml-64">
-        <header className="sticky top-0 z-40 flex items-center justify-between w-full px-4 py-3 shadow-sm md:py-4 bg-surface md:px-margin-desktop">
-          <div className="flex items-center gap-4">
-            <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 transition-colors rounded-lg md:hidden hover:bg-surface-container-low">
-              <Menu size={24} className="text-on-surface" strokeWidth={2.25} />
-            </button>
-          </div>
-          <div className="flex items-center gap-3 md:gap-6">
-            <div className="items-center hidden gap-2 px-3 py-1 border rounded-full sm:flex border-tertiary-container/20 bg-tertiary-container/10">
-              <Flame size={16} className="text-tertiary-container" strokeWidth={2.25} />
-              <span className="font-bold text-tertiary">450 XP</span>
-            </div>
-            <div className="flex items-center gap-2 px-3 md:gap-3 md:px-6">
-              <img
-                alt="Student Avatar"
-                className="object-cover w-8 h-8 border-2 rounded-full md:w-10 md:h-10 border-primary"
-                data-alt="A friendly, high-quality close-up portrait of a primary school student avatar character. The character has bright, expressive eyes and a warm smile, wearing a modern blue and yellow scholar cap and gown in a 3D Pixar-inspired digital art style. The background is a soft, blurred library with floating magical educational particles and warm, inviting sunlight."
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAk9z5GonZb0oXkuFqVzg5kIs9iHpOdeW7UmSYcA66ODqhlLo_pSWuPNl87YJ70E4hZwQMlK58F6_xTj3yfLT3gh_iSDZueouFRp74GfkED0XfiPl3jJQ0bvVM1d8JsGp9OMW2fg3qdMh7_6lcKZkYwAR9aMd4hHoPk3DWUa18gUsSaiw1OsEwGYengpCade_72zEWXAxuSCiW9uklJ-5qCSewEo2gsZWHs0BbD_PNHxThTnWTZN80kAzaZgPfTBsgQBlpuPdmdhB8"
-              />
-              <button className="w-full sm:w-auto chunky-button-primary flex items-center justify-center sm:justify-start gap-2 rounded-full bg-error px-6 md:px-8 py-2.5 md:py-3 font-button-text text-white text-sm md:text-base shadow-[0px_4px_0px_0px_#600e0e] transition-all active:translate-y-1 active:shadow-none font-bold">
-                Logout <LogOut size={22} className="text-white" strokeWidth={2.25} /></button>
-            </div>
-          </div>
-        </header>
+        <StudentHeader
+          onMenuClick={() => setSidebarOpen((value) => !value)}
+          avatarSrc="https://lh3.googleusercontent.com/aida-public/AB6AXuAk9z5GonZb0oXkuFqVzg5kIs9iHpOdeW7UmSYcA66ODqhlLo_pSWuPNl87YJ70E4hZwQMlK58F6_xTj3yfLT3gh_iSDZueouFRp74GfkED0XfiPl3jJQ0bvVM1d8JsGp9OMW2fg3qdMh7_6lcKZkYwAR9aMd4hHoPk3DWUa18gUsSaiw1OsEwGYengpCade_72zEWXAxuSCiW9uklJ-5qCSewEo2gsZWHs0BbD_PNHxThTnWTZN80kAzaZgPfTBsgQBlpuPdmdhB8"
+        />
 
         <section className="p-4 px-4 mt-6 md:p-6 md:mt-8 md:px-margin-desktop">
           <div className="relative p-4 overflow-hidden rounded-lg shadow-sm md:p-8 bg-primary-container text-on-primary">
