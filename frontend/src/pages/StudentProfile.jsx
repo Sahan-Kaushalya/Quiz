@@ -1,33 +1,31 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import {
 	Award,
 	BookOpen,
 	CheckCircle,
-    History,
+	ChevronDown,
+	History,
 	Clock3,
-	Coins,
 	Edit3,
 	FileText,
 	Flame,
 	LayoutDashboard,
 	Lock,
 	Map,
-	Menu,
 	CircleUser,
 	ShieldCheck,
 	Star,
 	Trophy,
-    LogOut,
+	X,
 } from 'lucide-react';
-import logoicon from '../assets/icons/logo.png';
 import Footer from '../ui/Footer';
 import { Badge as UIBadge, ButtonPrimary, ButtonSecondary, Card, CardContent, CardHeader, ProgressBar } from '../ui';
+import { StudentHeader, StudentSidebar } from '../ui';
 
 const NAV_ITEMS = [
 	{ label: 'Dashboard', icon: LayoutDashboard, to: '/dashboard' },
 	{ label: 'Quizzes', icon: BookOpen, to: '/dashboard' },
-	{ label: 'Past Papers', icon: FileText, to: '/dashboard' },
+	{ label: 'Past Papers', icon: FileText, to: '/past-papers' },
 	{ label: 'Adventure Map', icon: Map, to: '/dashboard' },
 	{ label: 'Leading', icon: Trophy, to: '/dashboard' },
 	{ label: 'Profile', icon: CircleUser, to: '/profile', active: true },
@@ -120,6 +118,18 @@ function ProfileBadge({ item }) {
 
 export default function StudentProfile() {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
+	const [profileModalOpen, setProfileModalOpen] = useState(false);
+
+	// Profile name + DiceBear avatar seed/style
+	const [fullName, setFullName] = useState('Alex Johnson');
+	// store raw seed (not pre-encoded) and encode when building the URL
+	const [avatarSeed, setAvatarSeed] = useState('Alex Johnson');
+	const [avatarStyle, setAvatarStyle] = useState('lorelei-neutral');
+
+	// Use DiceBear 9.x API endpoint (style is selectable)
+	const getAvatarUrl = (seed) => `https://api.dicebear.com/9.x/${avatarStyle}/svg?seed=${encodeURIComponent(seed)}&background=%23ffffff`;
+
+	const randomSeed = () => Math.random().toString(36).slice(2, 9);
 
 	useEffect(() => {
 		document.title = 'Profile | Quiz Master';
@@ -135,83 +145,10 @@ export default function StudentProfile() {
 
 	return (
 		<div className="min-h-screen overflow-x-hidden bg-surface text-on-surface font-body-md">
-			{sidebarOpen && <div className="fixed inset-0 z-40 bg-black/50 md:hidden" onClick={() => setSidebarOpen(false)} />}
-
-			<aside className={`fixed top-0 left-0 z-50 flex h-screen w-64 flex-col border-r border-surface-container-highest bg-surface-container-low py-6 transition-transform duration-300 md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
-				<div className="px-6 mb-10">
-					<div className="flex items-center gap-3">
-						<img src={logoicon} alt="Quiz Master" className="w-8 h-8 rounded-lg" />
-						<h3 className="font-headline-md text-headline-md font-extrabold tracking-tight text-[#4a39e2]">Quiz Master</h3>
-					</div>
-				</div>
-
-				<nav className="space-y-1 grow">
-					{NAV_ITEMS.map((item) => {
-						const isActive = item.active;
-
-						return (
-							<Link
-								key={item.label}
-								to={item.to}
-								onClick={() => setSidebarOpen(false)}
-								className={`mx-2 flex items-center gap-3 rounded-lg px-4 py-3 transition-all ${
-									isActive
-										? 'translate-x-1 bg-primary-container text-white shadow-sm'
-										: 'text-[#4b5563] hover:bg-surface-container-highest'
-								}`}
-							>
-								<Glyph icon={item.icon} size={18} strokeWidth={isActive ? 2.5 : 2.25} className={isActive ? 'text-white' : 'text-[#4b5563]'} />
-								<span className="font-label-lg text-label-lg">{item.label}</span>
-							</Link>
-						);
-					})}
-				</nav>
-
-				<div className="p-4 mx-4 mt-auto mb-4 border rounded-lg border-outline-variant bg-surface-container-low">
-					<h3 className="mb-3 flex items-center gap-2 font-label-lg text-label-lg text-[#4a39e2]">
-						<Trophy size={18} strokeWidth={2.25} />
-						Global Rank
-					</h3>
-					<div className="flex items-center justify-between mb-2">
-						<span className="text-sm text-[#6b7280]">Your Position</span>
-						<span className="font-bold text-[#d27d00]">#42</span>
-					</div>
-					<div className="mt-2 space-y-2">
-						<div className="flex items-center gap-2 text-xs opacity-70">
-							<span className="flex items-center justify-center w-4 h-4 text-white rounded-full bg-secondary-container">1</span>
-							<span>Leo The Brave</span>
-						</div>
-						<div className="flex items-center gap-2 text-xs opacity-70">
-							<span className="flex items-center justify-center w-4 h-4 text-white rounded-full bg-slate-400">2</span>
-							<span>MathsWhiz2024</span>
-						</div>
-					</div>
-				</div>
-			</aside>
+			<StudentSidebar items={NAV_ITEMS} open={sidebarOpen} onClose={() => setSidebarOpen(false)} rankLabel="#42" />
 
 			<main className="min-h-screen pb-12 ml-0 md:ml-64">
-				<header className="sticky top-0 z-40 flex items-center justify-between w-full px-4 py-3 shadow-sm bg-surface md:px-margin-desktop md:py-4">
-					<div className="flex items-center gap-4">
-						<button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 transition-colors rounded-lg hover:bg-surface-container-low md:hidden">
-							<Menu size={24} className="text-on-surface" strokeWidth={2.25} />
-						</button>
-					</div>
-					<div className="flex items-center gap-3 md:gap-6">
-						<div className="items-center hidden gap-2 px-3 py-1 border rounded-full border-tertiary-container/20 bg-tertiary-container/10 sm:flex">
-							<Flame size={16} className="text-tertiary-container" strokeWidth={2.25} />
-							<span className="font-bold text-tertiary">450 XP</span>
-						</div>
-						<div className="flex items-center gap-2 px-3 md:gap-3 md:px-6">
-							<img
-								alt="Student Avatar"
-								className="object-cover w-8 h-8 border-2 rounded-full border-primary md:h-10 md:w-10"
-								src="https://lh3.googleusercontent.com/aida-public/AB6AXuAk9z5GonZb0oXkuFqVzg5kIs9iHpOdeW7UmSYcA66ODqhlLo_pSWuPNl87YJ70E4hZwQMlK58F6_xTj3yfLT3gh_iSDZueouFRp74GfkED0XfiPl3jJQ0bvVM1d8JsGp9OMW2fg3qdMh7_6lcKZkYwAR9aMd4hHoPk3DWUa18gUsSaiw1OsEwGYengpCade_72zEWXAxuSCiW9uklJ-5qCSewEo2gsZWHs0BbD_PNHxThTnWTZN80kAzaZgPfTBsgQBlpuPdmdhB8"
-							/>
-							 <button className="w-full sm:w-auto chunky-button-primary flex items-center justify-center sm:justify-start gap-2 rounded-full bg-error px-6 md:px-8 py-2.5 md:py-3 font-button-text text-white text-sm md:text-base shadow-[0px_4px_0px_0px_#600e0e] transition-all active:translate-y-1 active:shadow-none font-bold">
-                Logout <LogOut size={22} className="text-white" strokeWidth={2.25} /></button>
-						</div>
-					</div>
-				</header>
+				<StudentHeader onMenuClick={() => setSidebarOpen((value) => !value)} avatarSrc={getAvatarUrl(avatarSeed)} />
 
 				<div className="px-4 py-6 mx-auto space-y-6 max-w-container-max md:px-margin-desktop md:py-8">
 					<section className="grid grid-cols-12 gap-4 md:gap-gutter">
@@ -225,7 +162,7 @@ export default function StudentProfile() {
 												className="object-cover w-full h-full rounded-full"
 												alt="Student avatar"
 												data-alt="A vibrant, high-quality character illustration of a smiling primary school student wearing a futuristic blue spacesuit, set against a soft bokeh background of a digital classroom. The style is modern 3D cartoonish with soft lighting, emphasizing a playful and encouraging educational atmosphere. High saturation and bright whites define the light-mode aesthetic."
-												src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4EjFtLUnqzIT2Abk51YVZf9S2W7qPbRB4Fm1fdMkOvqcZqoR3mY7ewQKxws-YsvYs95BEISNGSFdSKR1-1mLTP_wD7fuS5N1aAxCCb6bzf_3Ocb0m5VzmdKzL_71gfnc20SZvGqsfKJZh54VT3oRvsBQt3k-vhgTtHPLv7KbuNnubPABA223idjV42EpRVW7aiGAJMIUx2khml3vnJBvoiRyz1-Ef8zk0gnObnDZzP9JA-yUcUMq1bVeDH_wWFQZ_nuwaXnpKaKU"
+												src={getAvatarUrl(avatarSeed)}
 											/>
 										</div>
 										<div className="absolute px-3 py-1 text-sm font-black border-2 border-white rounded-full shadow-sm right-20 -bottom-2 bg-secondary-container text-on-secondary-container ">
@@ -241,7 +178,7 @@ export default function StudentProfile() {
 
 									<div className="pt-8 mt-8 border-t border-outline-variant">
 										<div className="flex flex-col gap-3">
-											<ButtonPrimary className="chunky-button flex w-full items-center justify-center gap-2 rounded-full bg-secondary-container py-3 text-button-text text-white shadow-[0px_4px_0px_0px_#b27300] hover:translate-y-0.5 hover:shadow-[0px_6px_0px_0px_#b45309]">
+											<ButtonPrimary onClick={() => setProfileModalOpen(true)} className="chunky-button flex w-full items-center justify-center gap-2 rounded-full bg-secondary-container py-3 text-button-text text-white shadow-[0px_4px_0px_0px_#b27300] hover:translate-y-0.5 hover:shadow-[0px_6px_0px_0px_#b45309]">
 												<Edit3 size={18} strokeWidth={2.25} />
 												Edit Profile
 											</ButtonPrimary>
@@ -334,6 +271,115 @@ export default function StudentProfile() {
 					<Footer />
 				</div>
 			</main>
+
+			{profileModalOpen && (
+				<div className="fixed inset-0 flex items-center justify-center p-4 z-60 bg-black/55">
+					<div className="w-4/12 max-w-11/12 overflow-hidden rounded-[2rem] bg-white shadow-[0px_24px_80px_rgba(0,0,0,0.28)]">
+						<div className="flex items-center justify-between px-5 py-4 border-b border-outline-variant">
+							<h2 className="text-lg font-extrabold text-on-surface">Edit Your Profile</h2>
+							<button
+								onClick={() => setProfileModalOpen(false)}
+								className="rounded-full p-1.5 text-on-surface-variant transition-colors hover:bg-surface-container-low hover:text-on-surface"
+								aria-label="Close dialog"
+							>
+								<X size={22} strokeWidth={2.25} />
+							</button>
+						</div>
+
+						<div className="px-5 py-6">
+							<p className="mb-4 text-sm font-bold text-on-surface-variant">Choose Your Avatar</p>
+							<div className="flex flex-col gap-3 mb-6">
+								<div className="flex items-center gap-4">
+									<div className="p-1 overflow-hidden bg-white border-4 rounded-full h-15 w-15 border-primary">
+										<img src={getAvatarUrl(avatarSeed)} alt="Selected avatar" className="object-cover w-full h-full rounded-full" />
+									</div>
+									<div className="flex items-center gap-2">
+										<ButtonSecondary
+											onClick={() => {
+												// Randomize should never produce an initials-style avatar
+												if (avatarStyle === 'initials') {
+													setAvatarStyle('adventurer-neutral');
+												}
+												setAvatarSeed(randomSeed());
+											}}
+											className="py-2 px-1 h-5"
+										>
+											Randomize
+										</ButtonSecondary>
+										<ButtonSecondary
+											onClick={() => {
+												// Use Name should use initials style per requirement
+												setAvatarStyle('initials');
+												setAvatarSeed(fullName || randomSeed());
+											}}
+											className="py-1 px-1 h-5"
+										>
+											Use Name
+										</ButtonSecondary>
+									</div>
+								</div>
+								<div className="flex items-center gap-3">
+									<select value={avatarStyle} onChange={(e) => setAvatarStyle(e.target.value)} className="rounded-full border border-outline-variant px-3 py-2 text-sm">
+										<option value="notionists-neutral">Notionists Neutral</option>
+										<option value="lorelei-neutral">Lorelei Neutral</option>
+										<option value="adventurer-neutral">Adventurer Neutral</option>
+										<option value="thumbs">Thumbs</option>
+										<option value="fun-emoji">Fun Emoji</option>
+										<option value="bottts-neutral">Bottts Neutral</option>
+										<option value="avataaars-neutral">Avataaars Neutral</option>
+										<option value="toon-head">Toon Head</option>
+									</select>
+								</div>
+							</div>
+
+							<div className="space-y-4">
+								<div>
+									<label className="block mb-2 text-sm font-bold text-on-surface-variant">Full Name</label>
+									<input
+										type="text"
+										value={fullName}
+										onChange={(e) => {
+											setFullName(e.target.value);
+											setAvatarSeed(e.target.value || randomSeed());
+										}}
+										className="w-full rounded-full border border-outline-variant bg-white px-4 py-2.5 text-sm text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
+									/>
+								</div>
+
+								<div>
+									<label className="block mb-2 text-sm font-bold text-on-surface-variant">Grade</label>
+									<div className="relative">
+										<select defaultValue="Year 5 - Advanced" className="w-full appearance-none rounded-full border border-outline-variant bg-white px-4 py-2.5 pr-10 text-sm text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15">
+											<option>Year 5 - Advanced</option>
+											<option>Year 4 - Beginner</option>
+											<option>Year 6 - Advanced</option>
+										</select>
+										<ChevronDown size={16} className="absolute -translate-y-1/2 pointer-events-none right-4 top-1/2 text-on-surface-variant" strokeWidth={2.25} />
+									</div>
+								</div>
+
+								<div>
+									<label className="block mb-2 text-sm font-bold text-on-surface-variant">School Name</label>
+									<input
+										type="text"
+										defaultValue="North Star Academy"
+										className="w-full rounded-full border border-outline-variant bg-white px-4 py-2.5 text-sm text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
+									/>
+								</div>
+							</div>
+
+							<div className="flex gap-2 mt-7">
+								<ButtonSecondary onClick={() => setProfileModalOpen(false)} className="w-full py-2.5 text-sm font-extrabold transition border-2 rounded-full border-outline-variant text-button-text text-on-surface hover:bg-surface-container-low">
+									Cancel
+								</ButtonSecondary>
+								<ButtonPrimary onClick={() => setProfileModalOpen(false)} className="w-full rounded-full bg-primary py-2.5 text-sm text-button-text font-extrabold text-white shadow-[0px_4px_0px_0px_#2e23a8] transition hover:translate-y-0.5 hover:shadow-[0px_6px_0px_0px_#211a82]">
+									Save Changes
+								</ButtonPrimary>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }
