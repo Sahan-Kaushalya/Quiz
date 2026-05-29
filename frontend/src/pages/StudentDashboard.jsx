@@ -36,7 +36,6 @@ const NAV_ITEMS = [
   { label: 'Dashboard', icon: LayoutDashboard, active: true },
   { label: 'Quizzes', icon: BookOpen },
   { label: 'Past Papers', icon: FileText },
-  { label: 'Adventure Map', icon: Map },
   { label: 'Leading', icon: ChartNoAxesColumn },
   { label: 'Profile', icon: CircleUser, to: '/profile' },
 ];
@@ -315,7 +314,7 @@ export default function StudentDashboard() {
           </div>
         </section>
 
-        <section className="p-4 px-4 mt-4 md:p-8 md:px-margin-desktop">
+        <section className="p-4 px-4 mt-4 md:p-8 md:px-margin-desktop hidden">
           <div className="flex flex-col gap-3 mb-4 md:flex-row md:items-end md:justify-between md:gap-0 md:mb-6">
             <div>
               <h3 className="text-lg md:text-xl font-headline-lg text-headline-lg text-primary">Your Adventure Map</h3>
