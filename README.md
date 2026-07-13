@@ -106,8 +106,8 @@ Quiz/
 
 ### Step 1: Clone the Repository
 ```bash
-git https://github.com/Sahan-Kaushalya/Quiz-updated.git
-cd Quiz-updated
+git https://github.com/Sahan-Kaushalya/Quiz.git
+cd Quiz
 ```
 
 ---
