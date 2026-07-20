@@ -278,3 +278,159 @@ export async function getSubjects() {
 
   return response.json();
 }
+
+export async function getAdventureQuests() {
+  const session = getAuthSession();
+  const headers = { "Content-Type": "application/json" };
+  if (session?.tokens?.accessToken) {
+    headers["Authorization"] = `Bearer ${session.tokens.accessToken}`;
+  }
+
+  const response = await fetch(`${API_BASE_URL}/app/adventure/quests`, {
+    method: "GET",
+    headers,
+  });
+
+  if (!response.ok) {
+    return parseErrorResponse(response);
+  }
+
+  return response.json();
+}
+export async function submitAdventureQuest(questId, payload) {
+  const session = getAuthSession();
+  const headers = { "Content-Type": "application/json" };
+  if (session?.tokens?.accessToken) {
+    headers["Authorization"] = `Bearer ${session.tokens.accessToken}`;
+  }
+
+  clearProfileCache();
+
+  const response = await fetch(`${API_BASE_URL}/app/adventure/quests/${questId}/submit`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    return parseErrorResponse(response);
+  }
+
+  const resData = await response.json();
+  if (resData.status === "success") {
+    const badge = resData.data?.badgeAwarded;
+    if (badge) {
+      window.dispatchEvent(new CustomEvent('badgeEarned', { detail: badge }));
+    }
+    window.dispatchEvent(new Event('profileUpdated'));
+  }
+
+  return resData;
+}
+
+export async function getDailyTrials() {
+  const session = getAuthSession();
+  const headers = { "Content-Type": "application/json" };
+  if (session?.tokens?.accessToken) {
+    headers["Authorization"] = `Bearer ${session.tokens.accessToken}`;
+  }
+
+  const response = await fetch(`${API_BASE_URL}/app/adventure/daily-trials`, {
+    method: "GET",
+    headers,
+  });
+
+  if (!response.ok) {
+    return parseErrorResponse(response);
+  }
+
+  return response.json();
+}
+export async function submitDailyTrial(trialId, payload) {
+  const session = getAuthSession();
+  const headers = { "Content-Type": "application/json" };
+  if (session?.tokens?.accessToken) {
+    headers["Authorization"] = `Bearer ${session.tokens.accessToken}`;
+  }
+
+  clearProfileCache();
+
+  const response = await fetch(`${API_BASE_URL}/app/adventure/daily-trials/${trialId}/submit`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    return parseErrorResponse(response);
+  }
+
+  const resData = await response.json();
+  if (resData.status === "success") {
+    window.dispatchEvent(new Event('profileUpdated'));
+  }
+
+  return resData;
+}
+
+export async function getDailyBonusStatus() {
+  const session = getAuthSession();
+  const headers = { "Content-Type": "application/json" };
+  if (session?.tokens?.accessToken) {
+    headers["Authorization"] = `Bearer ${session.tokens.accessToken}`;
+  }
+
+  const response = await fetch(`${API_BASE_URL}/app/adventure/daily-bonus`, {
+    method: "GET",
+    headers,
+  });
+
+  if (!response.ok) {
+    return parseErrorResponse(response);
+  }
+
+  return response.json();
+}
+
+export async function claimDailyBonus() {
+  const session = getAuthSession();
+  const headers = { "Content-Type": "application/json" };
+  if (session?.tokens?.accessToken) {
+    headers["Authorization"] = `Bearer ${session.tokens.accessToken}`;
+  }
+
+  clearProfileCache();
+
+  const response = await fetch(`${API_BASE_URL}/app/adventure/daily-bonus/claim`, {
+    method: "POST",
+    headers,
+  });
+
+  if (!response.ok) {
+    return parseErrorResponse(response);
+  }
+
+  const resData = await response.json();
+  if (resData.status === "success") {
+    window.dispatchEvent(new Event('profileUpdated'));
+  }
+
+  return resData;
+}
+
+export async function getAdventureLeaderboard() {
+  const session = getAuthSession();
+  const headers = { "Content-Type": "application/json" };
+  if (session?.tokens?.accessToken) {
+    headers["Authorization"] = `Bearer ${session.tokens.accessToken}`;
+  }
+
+  const response = await fetch(`${API_BASE_URL}/app/adventure/leaderboard`, {
+    method: "GET",
+    headers,
+  });
+
+  if (!response.ok) {
+    return parseErrorResponse(response);
+  }
+
+  return response.json();
+}

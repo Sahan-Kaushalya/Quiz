@@ -244,6 +244,10 @@ const checkBadgeCriteria = async (user, badge) => {
 
 		// Special badges (Ranks / Subject leaderboards)
 		if (badge.badge_type === "special") {
+			if (["Grasslands Champion", "Crystal Peaks Champion", "Volcanic Forge Champion"].includes(badge.name)) {
+				return false;
+			}
+
 			if (badge.name === "Global Elite") {
 				const countHigher = await User.count({
 					where: {
@@ -587,6 +591,27 @@ const createDefaultBadges = async () => {
 				icon_url: "/badges/level-20.png",
 				badge_type: "milestone",
 				xp_required: 25000
+			},
+			{
+				name: "Grasslands Champion",
+				description: "Complete all trials in Zone 1: The Grasslands. (තණබිම් ජයග්‍රාහකයා)",
+				icon_url: "/badges/grasslands-champ.png",
+				badge_type: "special",
+				xp_required: null
+			},
+			{
+				name: "Crystal Peaks Champion",
+				description: "Complete all trials in Zone 2: Crystal Peaks. (ස්ඵටික කඳු වැටි ජයග්‍රාහකයා)",
+				icon_url: "/badges/crystal-champ.png",
+				badge_type: "special",
+				xp_required: null
+			},
+			{
+				name: "Volcanic Forge Champion",
+				description: "Complete all trials in Zone 3: Volcanic Forge. (ගිනි කන්ද බටහිර ජයග්‍රාහකයා)",
+				icon_url: "/badges/volcanic-champ.png",
+				badge_type: "special",
+				xp_required: null
 			}
 		];
 

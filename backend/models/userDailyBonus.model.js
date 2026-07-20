@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db.config");
 
-const UserReview = sequelize.define(
-	"user_reviews",
+const UserDailyBonus = sequelize.define(
+	"user_daily_bonuses",
 	{
 		id: {
 			type: DataTypes.INTEGER,
@@ -20,35 +20,17 @@ const UserReview = sequelize.define(
 			onUpdate: "CASCADE",
 			onDelete: "CASCADE",
 		},
-		scholarship_marks: {
-			type: DataTypes.INTEGER,
-			allowNull: false,
-		},
-		review_rating: {
-			type: DataTypes.INTEGER,
-			allowNull: false,
-			defaultValue: 5,
-		},
-		review_text: {
-			type: DataTypes.TEXT,
-			allowNull: false,
-		},
-		show_on_landing_page: {
-			type: DataTypes.BOOLEAN,
-			allowNull: false,
-			defaultValue: false,
-		},
-		created_at: {
+		last_claimed_at: {
 			type: DataTypes.DATE,
 			allowNull: false,
 			defaultValue: DataTypes.NOW,
 		},
 	},
 	{
-		tableName: "user_reviews",
+		tableName: "user_daily_bonuses",
 		freezeTableName: true,
 		timestamps: false,
 	}
 );
 
-module.exports = UserReview;
+module.exports = UserDailyBonus;

@@ -28,6 +28,7 @@ const NAV_ITEMS = [
 	{ label: 'Dashboard', icon: LayoutDashboard, to: '/dashboard' },
 	{ label: 'Quizzes', icon: BookOpen, to: '/quizzes', active: true },
 	{ label: 'Past Papers', icon: FileText, to: '/past-papers' },
+	{ label: 'Adventure', icon: Map, to: '/adventure' },
 	{ label: 'Leading', icon: Trophy, to: '/leading' },
 	{ label: 'Profile', icon: CircleUser, to: '/profile' },
 ];

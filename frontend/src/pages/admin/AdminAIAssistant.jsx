@@ -465,7 +465,7 @@ export default function AdminAIAssistant() {
             <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div>
                 <div className="flex flex-wrap items-center gap-2 mb-4">
-                  <div className="inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1 text-xs font-semibold text-primary shadow-sm">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded-full shadow-sm bg-white/80 text-primary">
                     <Sparkles size={14} className="text-primary animate-pulse" /> AI Assistant Studio
                   </div>
                   <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-[11px] font-bold text-emerald-700 shadow-sm border border-emerald-100">
@@ -473,7 +473,7 @@ export default function AdminAIAssistant() {
                   </div>
                 </div>
                 <h2 className="text-3xl font-black text-slate-900 md:text-4xl">AI Quiz Assistant</h2>
-                <p className="mt-4 text-base leading-relaxed text-slate-600 max-w-full">
+                <p className="max-w-full mt-4 text-base leading-relaxed text-slate-600">
                   Generate high-quality bilingual (Sinhala & English) quizzes automatically using advanced LLMs, review/edit them manually, and save them directly.
                 </p>
               </div>
@@ -516,7 +516,7 @@ export default function AdminAIAssistant() {
         {/* Error notice banner */}
         {errorMessage && (
           <section className="px-4 mb-6 md:px-8 md:px-10">
-            <div className="rounded-2xl border border-rose-200 bg-rose-50 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
+            <div className="flex flex-col items-start justify-between gap-4 p-4 border shadow-sm rounded-2xl border-rose-200 bg-rose-50 sm:flex-row sm:items-center">
               <div className="flex items-start gap-3">
                 <AlertTriangle className="text-rose-600 mt-0.5 shrink-0" size={20} />
                 <div>
@@ -545,17 +545,17 @@ export default function AdminAIAssistant() {
             </div>
           ) : !hasApiKey ? (
             /* Key Missing State */
-            <Card className="max-w-2xl mx-auto overflow-hidden rounded-[2rem] border border-amber-200 bg-amber-50/20 p-8 shadow-soft text-center">
+            <Card className="max-w-6xl mx-auto overflow-hidden rounded-[2rem] border border-amber-200 bg-amber-50/20 p-8 shadow-soft text-center">
               <div className="flex justify-center mb-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-amber-600">
+                <div className="flex items-center justify-center rounded-full h-14 w-14 bg-amber-100 text-amber-600">
                   <KeyRound size={28} />
                 </div>
               </div>
               <h3 className="text-xl font-black text-slate-900">OpenRouter Key Required</h3>
-              <p className="mt-2 text-sm text-slate-600 leading-relaxed">
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">
                 To generate quizzes using AI models, you must first configure your OpenRouter API Key in the settings panel.
               </p>
-              <div className="mt-6 flex justify-center gap-3">
+              <div className="flex justify-center gap-3 mt-6">
                 <ButtonPrimary
                   onClick={() => navigate('/admin/settings')}
                   className="rounded-full px-6 py-2.5 font-bold text-sm inline-flex items-center gap-2 cursor-pointer"
@@ -570,7 +570,7 @@ export default function AdminAIAssistant() {
               
               {/* Left Config Card */}
               <Card className="rounded-[2rem] border border-surface-container-highest bg-white/80 p-6 shadow-soft sticky top-24">
-                <h3 className="text-lg font-black text-slate-900 mb-4 flex items-center gap-2">
+                <h3 className="flex items-center gap-2 mb-4 text-lg font-black text-slate-900">
                   <BrainCircuit size={18} className="text-primary" /> Parameters
                 </h3>
                 <form onSubmit={handleGenerateQuiz} className="space-y-4">
@@ -579,7 +579,7 @@ export default function AdminAIAssistant() {
                     <select
                       value={grade}
                       onChange={(e) => setGrade(e.target.value)}
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm font-bold text-slate-700 outline-none focus:border-primary focus:bg-white cursor-pointer"
+                      className="w-full px-3 py-3 text-sm font-bold border outline-none cursor-pointer rounded-2xl border-slate-200 bg-slate-50 text-slate-700 focus:border-primary focus:bg-white"
                     >
                       {dbGrades.map((g) => (
                         <option key={g} value={g}>{g}</option>
@@ -592,7 +592,7 @@ export default function AdminAIAssistant() {
                     <select
                       value={subject}
                       onChange={(e) => setSubject(e.target.value)}
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm font-bold text-slate-700 outline-none focus:border-primary focus:bg-white cursor-pointer"
+                      className="w-full px-3 py-3 text-sm font-bold border outline-none cursor-pointer rounded-2xl border-slate-200 bg-slate-50 text-slate-700 focus:border-primary focus:bg-white"
                     >
                       {dbSubjects.map((s) => (
                         <option key={s} value={s}>{s}</option>
@@ -634,13 +634,13 @@ export default function AdminAIAssistant() {
                     </div>
                   </div>
 
-                  <div className="grid gap-3 grid-cols-2">
+                  <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Difficulty</label>
                       <select
                         value={difficulty}
                         onChange={(e) => setDifficulty(e.target.value)}
-                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-2 py-2 text-xs font-bold text-slate-700 outline-none focus:border-primary focus:bg-white cursor-pointer"
+                        className="w-full px-2 py-2 text-xs font-bold border outline-none cursor-pointer rounded-2xl border-slate-200 bg-slate-50 text-slate-700 focus:border-primary focus:bg-white"
                       >
                         <option value="Easy">Easy</option>
                         <option value="Medium">Medium</option>
@@ -653,7 +653,7 @@ export default function AdminAIAssistant() {
                       <select
                         value={focusStyle}
                         onChange={(e) => setFocusStyle(e.target.value)}
-                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-2 py-2 text-xs font-bold text-slate-700 outline-none focus:border-primary focus:bg-white cursor-pointer"
+                        className="w-full px-2 py-2 text-xs font-bold border outline-none cursor-pointer rounded-2xl border-slate-200 bg-slate-50 text-slate-700 focus:border-primary focus:bg-white"
                       >
                         <option value="Conceptual">Conceptual</option>
                         <option value="Calculation-focused">Calculation-focused</option>
@@ -663,13 +663,13 @@ export default function AdminAIAssistant() {
                     </div>
                   </div>
 
-                  <div className="grid gap-3 grid-cols-2">
+                  <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Distractors</label>
                       <select
                         value={distractorStrength}
                         onChange={(e) => setDistractorStrength(e.target.value)}
-                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-2 py-2 text-xs font-bold text-slate-700 outline-none focus:border-primary focus:bg-white cursor-pointer"
+                        className="w-full px-2 py-2 text-xs font-bold border outline-none cursor-pointer rounded-2xl border-slate-200 bg-slate-50 text-slate-700 focus:border-primary focus:bg-white"
                       >
                         <option value="Standard">Standard</option>
                         <option value="Strong">Strong (Challenging)</option>
@@ -681,7 +681,7 @@ export default function AdminAIAssistant() {
                       <select
                         value={imagePreference}
                         onChange={(e) => setImagePreference(e.target.value)}
-                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-2 py-2 text-xs font-bold text-slate-700 outline-none focus:border-primary focus:bg-white cursor-pointer"
+                        className="w-full px-2 py-2 text-xs font-bold border outline-none cursor-pointer rounded-2xl border-slate-200 bg-slate-50 text-slate-700 focus:border-primary focus:bg-white"
                       >
                         <option value="none">No Images</option>
                         <option value="required">Require Images for all questions</option>
@@ -690,7 +690,7 @@ export default function AdminAIAssistant() {
                     </div>
                   </div>
 
-                  <div className="grid gap-3 grid-cols-3">
+                  <div className="grid grid-cols-3 gap-3">
                     <div className="col-span-1">
                       <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5">Questions</label>
                       <input
@@ -700,7 +700,7 @@ export default function AdminAIAssistant() {
                         required
                         value={questionsCount}
                         onChange={(e) => setQuestionsCount(e.target.value)}
-                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold outline-none focus:border-primary focus:bg-white text-center font-bold text-slate-800"
+                        className="w-full px-3 py-2 text-sm font-semibold font-bold text-center border outline-none rounded-2xl border-slate-200 bg-slate-50 focus:border-primary focus:bg-white text-slate-800"
                       />
                     </div>
                     <div className="col-span-2">
@@ -708,7 +708,7 @@ export default function AdminAIAssistant() {
                       <select
                         value={selectedModel}
                         onChange={(e) => setSelectedModel(e.target.value)}
-                        className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-2 py-2 text-xs font-semibold text-slate-700 outline-none focus:border-primary focus:bg-white cursor-pointer"
+                        className="w-full px-2 py-2 text-xs font-semibold border outline-none cursor-pointer rounded-2xl border-slate-200 bg-slate-50 text-slate-700 focus:border-primary focus:bg-white"
                       >
                         {AI_MODELS.map((model) => (
                           <option key={model.id} value={model.id}>{model.name}</option>
@@ -724,14 +724,14 @@ export default function AdminAIAssistant() {
                       value={customInstructions}
                       onChange={(e) => setCustomInstructions(e.target.value)}
                       placeholder="e.g. Include questions with simple Sinhala vocabulary."
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-xs outline-none transition focus:border-primary focus:bg-white resize-none"
+                      className="w-full px-4 py-2 text-xs transition border outline-none resize-none rounded-2xl border-slate-200 bg-slate-50 focus:border-primary focus:bg-white"
                     />
                   </div>
 
                   <ButtonPrimary
                     type="submit"
                     disabled={isGenerating || isSubmittingQuiz}
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-full py-3 text-sm font-bold disabled:opacity-55 cursor-pointer"
+                    className="inline-flex items-center justify-center w-full gap-2 py-3 text-sm font-bold rounded-full cursor-pointer disabled:opacity-55"
                   >
                     {isGenerating ? (
                       <><Loader2 className="animate-spin" size={16} /> Generating...</>
@@ -748,7 +748,7 @@ export default function AdminAIAssistant() {
                   <div className="flex flex-col items-center justify-center py-24 text-center rounded-[2rem] border border-dashed border-slate-200 bg-slate-50/50 p-6">
                     <Loader2 className="animate-spin text-primary" size={48} />
                     <h4 className="mt-4 text-lg font-black text-slate-900">Quiz Generation in Progress</h4>
-                    <p className="mt-2 text-sm text-slate-500 max-w-full">
+                    <p className="max-w-full mt-2 text-sm text-slate-500">
                       Generating questions in Sinhala & English using {AI_MODELS.find(m => m.id === selectedModel)?.name || 'selected model'}. This may take up to a minute...
                     </p>
                   </div>
@@ -758,7 +758,7 @@ export default function AdminAIAssistant() {
                   <div className="flex flex-col items-center justify-center py-28 text-center rounded-[2rem] border border-dashed border-slate-200 bg-slate-50/50 p-6">
                     <Sparkles className="text-slate-300" size={56} />
                     <h4 className="mt-4 text-base font-black text-slate-700">Ready to Generate</h4>
-                    <p className="mt-1 text-xs text-slate-400 max-w-full leading-relaxed">
+                    <p className="max-w-full mt-1 text-xs leading-relaxed text-slate-400">
                       Select subject parameters on the left sidebar to generate a fully editable quiz draft.
                     </p>
                   </div>
@@ -769,15 +769,15 @@ export default function AdminAIAssistant() {
                   <Card className="rounded-[2rem] border border-surface-container-highest bg-white/80 p-6 shadow-soft">
                     
                     {/* Header Controls */}
-                    <div className="flex flex-wrap items-center justify-between border-b border-slate-100 pb-5 mb-5 gap-3">
+                    <div className="flex flex-wrap items-center justify-between gap-3 pb-5 mb-5 border-b border-slate-100">
                       <div>
-                        <span className="text-xs font-bold uppercase tracking-wider text-primary">Draft Editor</span>
+                        <span className="text-xs font-bold tracking-wider uppercase text-primary">Draft Editor</span>
                         <h3 className="text-xl font-black text-slate-900">Review & Save Quiz</h3>
                       </div>
                       <div className="flex gap-2">
                         <button
                           onClick={() => setGeneratedQuiz(null)}
-                          className="rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-bold text-slate-500 hover:bg-slate-50 cursor-pointer"
+                          className="px-4 py-2 text-xs font-bold bg-white border rounded-full cursor-pointer border-slate-200 text-slate-500 hover:bg-slate-50"
                         >
                           Discard
                         </button>
@@ -797,7 +797,7 @@ export default function AdminAIAssistant() {
 
                     {/* Meta section */}
                     <div className="space-y-4 bg-slate-50/60 rounded-[1.5rem] p-4 border border-slate-200/50 mb-6">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">Quiz Settings</h4>
+                      <h4 className="text-xs font-bold tracking-wider uppercase text-slate-500">Quiz Settings</h4>
                       <div className="grid gap-4 md:grid-cols-2">
                         <div>
                           <label className="block text-[10px] font-bold uppercase text-slate-400 mb-1">Quiz Title</label>
@@ -806,11 +806,11 @@ export default function AdminAIAssistant() {
                             required
                             value={generatedQuiz.title}
                             onChange={(e) => updateQuizMeta('title', e.target.value)}
-                            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-bold text-slate-800 outline-none focus:border-primary"
+                            className="w-full px-3 py-2 text-sm font-bold bg-white border outline-none rounded-xl border-slate-200 text-slate-800 focus:border-primary"
                           />
                         </div>
 
-                        <div className="grid gap-3 grid-cols-2">
+                        <div className="grid grid-cols-2 gap-3">
                           <div>
                             <label className="block text-[10px] font-bold uppercase text-slate-400 mb-1">Time Limit (seconds)</label>
                             <input
@@ -818,7 +818,7 @@ export default function AdminAIAssistant() {
                               required
                               value={generatedQuiz.time_limit}
                               onChange={(e) => updateQuizMeta('time_limit', e.target.value)}
-                              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-800 outline-none focus:border-primary"
+                              className="w-full px-3 py-2 text-sm font-semibold bg-white border outline-none rounded-xl border-slate-200 text-slate-800 focus:border-primary"
                             />
                           </div>
                           <div>
@@ -828,7 +828,7 @@ export default function AdminAIAssistant() {
                               placeholder="All"
                               value={generatedQuiz.questions_to_show}
                               onChange={(e) => updateQuizMeta('questions_to_show', e.target.value)}
-                              className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-800 outline-none focus:border-primary"
+                              className="w-full px-3 py-2 text-sm font-semibold bg-white border outline-none rounded-xl border-slate-200 text-slate-800 focus:border-primary"
                             />
                           </div>
                         </div>
@@ -840,7 +840,7 @@ export default function AdminAIAssistant() {
                           rows="2"
                           value={generatedQuiz.description}
                           onChange={(e) => updateQuizMeta('description', e.target.value)}
-                          className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-600 outline-none focus:border-primary"
+                          className="w-full px-3 py-2 text-xs bg-white border outline-none rounded-xl border-slate-200 text-slate-600 focus:border-primary"
                         />
                       </div>
                     </div>
@@ -848,11 +848,11 @@ export default function AdminAIAssistant() {
                     {/* Questions editor list */}
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">Questions List ({generatedQuiz.questions.length})</h4>
+                        <h4 className="text-xs font-bold tracking-wider uppercase text-slate-500">Questions List ({generatedQuiz.questions.length})</h4>
                         <button
                           type="button"
                           onClick={addNewQuestion}
-                          className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline cursor-pointer"
+                          className="inline-flex items-center gap-1 text-xs font-bold cursor-pointer text-primary hover:underline"
                         >
                           <Plus size={14} /> Add Question
                         </button>
@@ -861,18 +861,18 @@ export default function AdminAIAssistant() {
                       {generatedQuiz.questions.map((question, qIdx) => {
                         const isExpanded = expandedQuestion === qIdx;
                         return (
-                          <div key={qIdx} className="rounded-2xl border border-slate-200 overflow-hidden bg-white shadow-sm">
+                          <div key={qIdx} className="overflow-hidden bg-white border shadow-sm rounded-2xl border-slate-200">
                             
                             {/* Accordion header */}
                             <div
                               onClick={() => setExpandedQuestion(isExpanded ? null : qIdx)}
-                              className="flex items-center justify-between p-4 cursor-pointer hover:bg-slate-50 transition bg-slate-50/30"
+                              className="flex items-center justify-between p-4 transition cursor-pointer hover:bg-slate-50 bg-slate-50/30"
                             >
-                              <div className="flex items-center gap-3 flex-1 min-w-0 pr-4">
-                                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-xs font-bold text-slate-600 shrink-0">
+                              <div className="flex items-center flex-1 min-w-0 gap-3 pr-4">
+                                <span className="flex items-center justify-center w-6 h-6 text-xs font-bold rounded-full bg-slate-200 text-slate-600 shrink-0">
                                   {qIdx + 1}
                                 </span>
-                                <p className="text-sm font-bold text-slate-800 truncate">
+                                <p className="text-sm font-bold truncate text-slate-800">
                                   {question.question_text || '(Empty Question)'}
                                 </p>
                               </div>
@@ -880,7 +880,7 @@ export default function AdminAIAssistant() {
                                 <button
                                   type="button"
                                   onClick={(e) => { e.stopPropagation(); deleteQuestion(qIdx); }}
-                                  className="p-1 text-slate-400 hover:text-rose-500 rounded-full hover:bg-rose-50 cursor-pointer"
+                                  className="p-1 rounded-full cursor-pointer text-slate-400 hover:text-rose-500 hover:bg-rose-50"
                                   title="Delete question"
                                 >
                                   <Trash2 size={14} />
@@ -891,7 +891,7 @@ export default function AdminAIAssistant() {
 
                             {/* Accordion content */}
                             {isExpanded && (
-                              <div className="p-4 border-t border-slate-100 space-y-4 bg-white">
+                              <div className="p-4 space-y-4 bg-white border-t border-slate-100">
                                 <div className="grid gap-4 md:grid-cols-3">
                                   <div className="md:col-span-2">
                                     <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Question Text</label>
@@ -899,18 +899,18 @@ export default function AdminAIAssistant() {
                                       type="text"
                                       value={question.question_text}
                                       onChange={(e) => updateQuestionField(qIdx, 'question_text', e.target.value)}
-                                      className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-800 outline-none focus:border-primary"
+                                      className="w-full px-3 py-2 text-sm font-semibold border outline-none rounded-xl border-slate-200 text-slate-800 focus:border-primary"
                                     />
                                   </div>
 
-                                  <div className="grid gap-2 grid-cols-2">
+                                  <div className="grid grid-cols-2 gap-2">
                                     <div>
                                       <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">XP Reward</label>
                                       <input
                                         type="number"
                                         value={question.xp_reward}
                                         onChange={(e) => updateQuestionField(qIdx, 'xp_reward', e.target.value)}
-                                        className="w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-primary text-center font-bold"
+                                        className="w-full px-3 py-2 text-sm font-bold text-center border outline-none rounded-xl border-slate-200 focus:border-primary"
                                       />
                                     </div>
                                     <div>
@@ -918,7 +918,7 @@ export default function AdminAIAssistant() {
                                       <select
                                         value={question.question_type}
                                         onChange={(e) => updateQuestionField(qIdx, 'question_type', e.target.value)}
-                                        className="w-full rounded-xl border border-slate-200 px-2 py-2 text-sm outline-none focus:border-primary cursor-pointer font-semibold"
+                                        className="w-full px-2 py-2 text-sm font-semibold border outline-none cursor-pointer rounded-xl border-slate-200 focus:border-primary"
                                       >
                                         <option value="single">Single Choice</option>
                                         <option value="multiple">Multiple Choice</option>
@@ -934,7 +934,7 @@ export default function AdminAIAssistant() {
                                       type="text"
                                       value={question.hint}
                                       onChange={(e) => updateQuestionField(qIdx, 'hint', e.target.value)}
-                                      className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs outline-none focus:border-primary"
+                                      className="w-full px-3 py-2 text-xs border outline-none rounded-xl border-slate-200 focus:border-primary"
                                       placeholder="Leave blank if none"
                                     />
                                   </div>
@@ -945,18 +945,18 @@ export default function AdminAIAssistant() {
                                       type="text"
                                       value={question.image_url}
                                       onChange={(e) => updateQuestionField(qIdx, 'image_url', e.target.value)}
-                                      className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs outline-none focus:border-primary"
+                                      className="w-full px-3 py-2 text-xs border outline-none rounded-xl border-slate-200 focus:border-primary"
                                       placeholder="https://images.unsplash.com/..."
                                     />
                                   </div>
                                 </div>
 
                                 {question.image_url && (
-                                  <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-2 max-w-sm">
+                                  <div className="flex items-center max-w-sm gap-3 p-2 border rounded-xl border-slate-200 bg-slate-50">
                                     <img
                                       src={question.image_url}
                                       alt="AI Preview"
-                                      className="h-14 w-20 object-cover rounded border bg-white"
+                                      className="object-cover w-20 bg-white border rounded h-14"
                                       onError={(e) => { e.target.src = 'https://placehold.co/100x70?text=Invalid+Image'; }}
                                     />
                                     <div>
@@ -967,7 +967,7 @@ export default function AdminAIAssistant() {
                                 )}
 
                                 {/* Options choices */}
-                                <div className="space-y-2 border-t border-slate-100 pt-3">
+                                <div className="pt-3 space-y-2 border-t border-slate-100">
                                   <div className="flex items-center justify-between">
                                     <p className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Answer Choices</p>
                                     <button
@@ -981,7 +981,7 @@ export default function AdminAIAssistant() {
 
                                   <div className="space-y-3">
                                     {question.options.map((option, oIdx) => (
-                                      <div key={oIdx} className="flex flex-col gap-2 rounded-xl border border-slate-100 p-3 bg-slate-50/50">
+                                      <div key={oIdx} className="flex flex-col gap-2 p-3 border rounded-xl border-slate-100 bg-slate-50/50">
                                         <div className="flex items-center gap-3">
                                           {/* Check if correct */}
                                           <button
@@ -1010,7 +1010,7 @@ export default function AdminAIAssistant() {
                                             <button
                                               type="button"
                                               onClick={() => removeOption(qIdx, oIdx)}
-                                              className="text-slate-400 hover:text-rose-500 p-1 cursor-pointer"
+                                              className="p-1 cursor-pointer text-slate-400 hover:text-rose-500"
                                             >
                                               <X size={14} />
                                             </button>
@@ -1038,7 +1038,7 @@ export default function AdminAIAssistant() {
                       })}
                     </div>
 
-                    <div className="mt-8 flex justify-end border-t border-slate-100 pt-5">
+                    <div className="flex justify-end pt-5 mt-8 border-t border-slate-100">
                       <ButtonPrimary
                         onClick={handleSaveQuiz}
                         disabled={isSubmittingQuiz}
@@ -1063,7 +1063,7 @@ export default function AdminAIAssistant() {
               
               {/* Left Model Config Card */}
               <Card className="rounded-[2rem] border border-surface-container-highest bg-white/80 p-6 shadow-soft sticky top-24">
-                <h3 className="text-sm font-black text-slate-900 mb-3 flex items-center gap-2">
+                <h3 className="flex items-center gap-2 mb-3 text-sm font-black text-slate-900">
                   <Settings size={16} className="text-primary" /> Chat Model
                 </h3>
                 <div className="space-y-4">
@@ -1072,7 +1072,7 @@ export default function AdminAIAssistant() {
                     <select
                       value={selectedModel}
                       onChange={(e) => setSelectedModel(e.target.value)}
-                      className="w-full rounded-xl border border-slate-200 bg-slate-50 px-2 py-2 text-xs font-semibold text-slate-700 outline-none focus:border-primary cursor-pointer"
+                      className="w-full px-2 py-2 text-xs font-semibold border outline-none cursor-pointer rounded-xl border-slate-200 bg-slate-50 text-slate-700 focus:border-primary"
                     >
                       {AI_MODELS.map((model) => (
                         <option key={model.id} value={model.id}>{model.name}</option>
@@ -1097,9 +1097,9 @@ export default function AdminAIAssistant() {
                   }
                 `}} />
                 
-                <div className="border-b border-slate-100 p-4 bg-slate-50/50 flex items-center justify-between">
+                <div className="flex items-center justify-between p-4 border-b border-slate-100 bg-slate-50/50">
                   <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                     <span className="text-xs font-bold text-slate-700">AI Assistant Console</span>
                   </div>
                   <button
@@ -1122,7 +1122,7 @@ export default function AdminAIAssistant() {
                 </div>
 
                 {/* Messages scroll list */}
-                <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-50/20">
+                <div className="flex-1 p-6 space-y-6 overflow-y-auto bg-slate-50/20">
                   {chatMessages.map((msg, idx) => {
                     const isUser = msg.role === 'user';
 
@@ -1130,7 +1130,7 @@ export default function AdminAIAssistant() {
                       return (
                         <div key={idx} className="flex justify-end w-full chat-msg-animate">
                           <div className="relative group bg-indigo-600 text-white rounded-2xl rounded-tr-none px-4 py-2.5 max-w-[70%] text-xs leading-relaxed shadow-soft border border-indigo-500/20">
-                            <p className="whitespace-pre-wrap font-medium">{msg.content}</p>
+                            <p className="font-medium whitespace-pre-wrap">{msg.content}</p>
                             
                             {/* Delete button */}
                             {chatMessages.length > 1 && (
@@ -1152,7 +1152,7 @@ export default function AdminAIAssistant() {
 
                     // Assistant response styling: un-bubbled raw text with action row
                     return (
-                      <div key={idx} className="flex flex-col items-start w-full chat-msg-animate group pb-4">
+                      <div key={idx} className="flex flex-col items-start w-full pb-4 chat-msg-animate group">
                         <div className="text-slate-800 text-xs leading-relaxed max-w-[90%] whitespace-pre-wrap font-medium">
                           {msg.content}
                         </div>
@@ -1165,7 +1165,7 @@ export default function AdminAIAssistant() {
                               navigator.clipboard.writeText(msg.content);
                               toast.success("Copied to clipboard! 📋");
                             }}
-                            className="p-1 hover:text-slate-700 transition cursor-pointer"
+                            className="p-1 transition cursor-pointer hover:text-slate-700"
                             title="Copy message"
                           >
                             <Copy size={13} />
@@ -1173,7 +1173,7 @@ export default function AdminAIAssistant() {
                           <button
                             type="button"
                             onClick={() => toast.success("Feedback submitted! 👍")}
-                            className="p-1 hover:text-emerald-600 transition cursor-pointer"
+                            className="p-1 transition cursor-pointer hover:text-emerald-600"
                             title="Helpful"
                           >
                             <ThumbsUp size={13} />
@@ -1181,7 +1181,7 @@ export default function AdminAIAssistant() {
                           <button
                             type="button"
                             onClick={() => toast.success("Feedback submitted! 👎")}
-                            className="p-1 hover:text-rose-600 transition cursor-pointer"
+                            className="p-1 transition cursor-pointer hover:text-rose-600"
                             title="Not helpful"
                           >
                             <ThumbsDown size={13} />
@@ -1189,7 +1189,7 @@ export default function AdminAIAssistant() {
                           <button
                             type="button"
                             onClick={() => toast.success("Shared message link.")}
-                            className="p-1 hover:text-slate-700 transition cursor-pointer"
+                            className="p-1 transition cursor-pointer hover:text-slate-700"
                             title="Share"
                           >
                             <Share2 size={13} />
@@ -1226,14 +1226,14 @@ export default function AdminAIAssistant() {
                                 }
                               }
                             }}
-                            className="p-1 hover:text-slate-700 transition cursor-pointer"
+                            className="p-1 transition cursor-pointer hover:text-slate-700"
                             title="Regenerate"
                           >
                             <RotateCw size={13} />
                           </button>
                           <button
                             type="button"
-                            className="p-1 hover:text-slate-700 transition cursor-pointer"
+                            className="p-1 transition cursor-pointer hover:text-slate-700"
                             title="More options"
                           >
                             <MoreHorizontal size={13} />
@@ -1244,8 +1244,8 @@ export default function AdminAIAssistant() {
                   })}
                   
                   {isSendingChatMessage && (
-                    <div className="flex items-center gap-2 text-slate-400 text-xs py-2 chat-msg-animate">
-                      <div className="flex space-x-1 items-center h-2">
+                    <div className="flex items-center gap-2 py-2 text-xs text-slate-400 chat-msg-animate">
+                      <div className="flex items-center h-2 space-x-1">
                         <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                         <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                         <div className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -1257,19 +1257,19 @@ export default function AdminAIAssistant() {
                 </div>
 
                 {/* Chat input box */}
-                <form onSubmit={handleSendChatMessage} className="border-t border-slate-100 p-4 bg-slate-50/50 flex gap-2">
+                <form onSubmit={handleSendChatMessage} className="flex gap-2 p-4 border-t border-slate-100 bg-slate-50/50">
                   <input
                     type="text"
                     value={chatInput}
                     onChange={(e) => setChatInput(e.target.value)}
                     disabled={isSendingChatMessage}
                     placeholder="Type your curriculum or quiz question here..."
-                    className="flex-1 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-xs outline-none focus:border-primary disabled:opacity-55"
+                    className="flex-1 px-4 py-3 text-xs bg-white border outline-none rounded-2xl border-slate-200 focus:border-primary disabled:opacity-55"
                   />
                   <button
                     type="submit"
                     disabled={isSendingChatMessage || !chatInput.trim()}
-                    className="rounded-2xl bg-indigo-600 text-white px-5 py-3 text-xs font-bold shadow hover:bg-indigo-700 transition disabled:opacity-50 cursor-pointer"
+                    className="px-5 py-3 text-xs font-bold text-white transition bg-indigo-600 shadow cursor-pointer rounded-2xl hover:bg-indigo-700 disabled:opacity-50"
                   >
                     Send
                   </button>

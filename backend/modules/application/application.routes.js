@@ -2,6 +2,17 @@ const express = require("express");
 const { getGrades, getSubjectsByGrade, getTopRankedUsers, getLeaderboard, getSubjects } = require("./controllers/grade.controller");
 const { getPapers, createPaper, updatePaper, downloadPaper, bookmarkPaper, completePaper, createSubject, createYear } = require("./controllers/paper.controller");
 const { getQuizzes, getQuizById, submitQuiz } = require("./controllers/quiz.controller");
+const { getLandingPageReviews } = require("./controllers/reviews.controller");
+const { getLandingPageConfig } = require("./controllers/config.controller");
+const {
+  getAdventureQuests,
+  submitQuest,
+  getDailyTrials,
+  submitDailyTrial,
+  getDailyBonusStatus,
+  claimDailyBonus,
+  getAdventureLeaderboard
+} = require("./controllers/adventure.controller");
 const { requireUser, requireUserOrAdmin } = require("../../middleware/auth");
 const { uploadMultipleFiles } = require("../../middleware/fileUpload");
 
@@ -19,6 +30,8 @@ applicationRoutes.get("/health", (req, res) => {
 applicationRoutes.get("/grades", getGrades);
 applicationRoutes.get("/grades/:gradeId/subjects", getSubjectsByGrade);
 applicationRoutes.get("/leaderboard/top-3", getTopRankedUsers);
+applicationRoutes.get("/reviews", getLandingPageReviews);
+applicationRoutes.get("/config/landing-page", getLandingPageConfig);
 
 // Protected routes for registered users
 applicationRoutes.get("/papers", requireUserOrAdmin, getPapers);
@@ -38,5 +51,14 @@ applicationRoutes.post("/quizzes/:quizId/submit", requireUser, submitQuiz);
 
 // Leaderboard
 applicationRoutes.get("/leaderboard", requireUser, getLeaderboard);
+
+// Adventure Quests
+applicationRoutes.get("/adventure/quests", requireUser, getAdventureQuests);
+applicationRoutes.post("/adventure/quests/:id/submit", requireUser, submitQuest);
+applicationRoutes.get("/adventure/daily-trials", requireUser, getDailyTrials);
+applicationRoutes.post("/adventure/daily-trials/:id/submit", requireUser, submitDailyTrial);
+applicationRoutes.get("/adventure/daily-bonus", requireUser, getDailyBonusStatus);
+applicationRoutes.post("/adventure/daily-bonus/claim", requireUser, claimDailyBonus);
+applicationRoutes.get("/adventure/leaderboard", requireUser, getAdventureLeaderboard);
 
 module.exports = applicationRoutes;

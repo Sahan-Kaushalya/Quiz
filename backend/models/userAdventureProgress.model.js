@@ -1,8 +1,8 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db.config");
 
-const UserReview = sequelize.define(
-	"user_reviews",
+const UserAdventureProgress = sequelize.define(
+	"user_adventure_progresses",
 	{
 		id: {
 			type: DataTypes.INTEGER,
@@ -20,35 +20,32 @@ const UserReview = sequelize.define(
 			onUpdate: "CASCADE",
 			onDelete: "CASCADE",
 		},
-		scholarship_marks: {
+		quest_id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
+			references: {
+				model: "adventure_quests",
+				key: "id",
+			},
+			onUpdate: "CASCADE",
+			onDelete: "CASCADE",
 		},
-		review_rating: {
-			type: DataTypes.INTEGER,
+		status: {
+			type: DataTypes.ENUM("completed", "failed"),
 			allowNull: false,
-			defaultValue: 5,
+			defaultValue: "completed",
 		},
-		review_text: {
-			type: DataTypes.TEXT,
-			allowNull: false,
-		},
-		show_on_landing_page: {
-			type: DataTypes.BOOLEAN,
-			allowNull: false,
-			defaultValue: false,
-		},
-		created_at: {
+		completed_at: {
 			type: DataTypes.DATE,
 			allowNull: false,
 			defaultValue: DataTypes.NOW,
 		},
 	},
 	{
-		tableName: "user_reviews",
+		tableName: "user_adventure_progresses",
 		freezeTableName: true,
 		timestamps: false,
 	}
 );
 
-module.exports = UserReview;
+module.exports = UserAdventureProgress;

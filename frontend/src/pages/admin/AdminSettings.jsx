@@ -264,11 +264,11 @@ export default function AdminSettings() {
           <div className="overflow-hidden rounded-[2rem] border border-surface-container-highest bg-gradient-to-br from-primary-fixed via-white to-surface-container-lowest p-6 shadow-soft md:p-8">
             <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-full">
-                <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1 text-sm font-semibold text-primary shadow-sm">
+                <div className="inline-flex items-center gap-2 px-3 py-1 mb-4 text-sm font-semibold rounded-full shadow-sm bg-white/80 text-primary">
                   <Sparkles size={16} /> Admin Settings
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
-                  <img src={logoicon} alt="Quiz Master logo" className="h-10 w-auto" />
+                  <img src={logoicon} alt="Quiz Master logo" className="w-auto h-10" />
                   <h2 className="text-3xl font-black text-slate-900 md:text-4xl">Account Settings</h2>
                 </div>
                 <p className="mt-4 text-base leading-relaxed text-slate-600">
@@ -278,7 +278,7 @@ export default function AdminSettings() {
 
               <button
                 onClick={handleLogout}
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-rose-200 bg-white px-5 py-3 text-sm font-bold text-rose-600 transition hover:bg-rose-50 cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 text-sm font-bold transition bg-white border rounded-full cursor-pointer border-rose-200 text-rose-600 hover:bg-rose-50"
               >
                 <LogOut size={16} /> Sign Out
               </button>
@@ -303,7 +303,7 @@ export default function AdminSettings() {
                     <img
                       src={currentAvatar}
                       alt={admin?.admin_name}
-                      className="h-24 w-24 rounded-full object-cover border-4 border-white shadow-md"
+                      className="object-cover w-24 h-24 border-4 border-white rounded-full shadow-md"
                       onError={(e) => {
                         e.target.src = `https://api.dicebear.com/9.x/initials/svg?seed=${admin?.admin_name || 'AD'}&background=%23ffffff`;
                       }}
@@ -311,7 +311,7 @@ export default function AdminSettings() {
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white shadow-md transition hover:scale-110 cursor-pointer"
+                      className="absolute bottom-0 right-0 flex items-center justify-center w-8 h-8 text-white transition rounded-full shadow-md cursor-pointer bg-primary hover:scale-110"
                       title="Change avatar"
                     >
                       <Camera size={14} />
@@ -329,7 +329,7 @@ export default function AdminSettings() {
                     <button
                       type="button"
                       onClick={() => { setAvatarPreview(null); setAvatarFile(null); }}
-                      className="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-rose-500 hover:underline cursor-pointer"
+                      className="inline-flex items-center gap-1 mt-2 text-xs font-semibold cursor-pointer text-rose-500 hover:underline"
                     >
                       <X size={12} /> Remove new photo
                     </button>
@@ -343,7 +343,7 @@ export default function AdminSettings() {
                     </span>
                   </div>
 
-                  <div className="mt-5 border-t border-slate-100 pt-4 text-left space-y-3">
+                  <div className="pt-4 mt-5 space-y-3 text-left border-t border-slate-100">
                     <div>
                       <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Username</p>
                       <p className="mt-0.5 text-sm font-semibold text-slate-700">@{admin?.username}</p>
@@ -385,9 +385,9 @@ export default function AdminSettings() {
                 {/* PROFILE TAB */}
                 {activeTab === 'profile' && (
                   <Card className="overflow-hidden rounded-[2rem] border border-surface-container-highest bg-white/80 shadow-soft">
-                    <div className="border-b border-slate-100 p-6">
+                    <div className="p-6 border-b border-slate-100">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary-fixed text-primary">
+                        <div className="flex items-center justify-center w-10 h-10 rounded-2xl bg-primary-fixed text-primary">
                           <User size={18} />
                         </div>
                         <div>
@@ -399,26 +399,26 @@ export default function AdminSettings() {
 
                     <form onSubmit={handleSaveProfile} className="p-6 space-y-5">
                       {/* Avatar inline */}
-                      <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                      <div className="flex items-center gap-4 p-4 border rounded-2xl border-slate-200 bg-slate-50">
                         <img
                           src={currentAvatar}
                           alt="Avatar"
-                          className="h-16 w-16 rounded-full object-cover border-2 border-white shadow"
+                          className="object-cover w-16 h-16 border-2 border-white rounded-full shadow"
                           onError={(e) => {
                             e.target.src = `https://api.dicebear.com/9.x/initials/svg?seed=${admin?.admin_name || 'AD'}&background=%23ffffff`;
                           }}
                         />
                         <div className="flex-1">
-                          <p className="text-sm font-semibold text-slate-700 mb-2">Profile Photo</p>
+                          <p className="mb-2 text-sm font-semibold text-slate-700">Profile Photo</p>
                           <button
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
-                            className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-white px-4 py-2 text-xs font-bold text-primary transition hover:bg-primary-fixed/30 cursor-pointer"
+                            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold transition bg-white border rounded-full cursor-pointer border-primary/30 text-primary hover:bg-primary-fixed/30"
                           >
                             <Camera size={13} /> Change Photo
                           </button>
                           {avatarFile && (
-                            <p className="mt-1 text-xs text-emerald-600 font-semibold flex items-center gap-1">
+                            <p className="flex items-center gap-1 mt-1 text-xs font-semibold text-emerald-600">
                               <CheckCircle2 size={12} /> {avatarFile.name}
                             </p>
                           )}
@@ -434,7 +434,7 @@ export default function AdminSettings() {
                             onChange={(e) => setProfileForm((p) => ({ ...p, admin_name: e.target.value }))}
                             placeholder="e.g. Sahan Admin"
                             required
-                            className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-primary focus:bg-white"
+                            className="w-full px-4 py-3 mt-2 text-sm transition border outline-none rounded-2xl border-slate-200 bg-slate-50 focus:border-primary focus:bg-white"
                           />
                         </label>
 
@@ -446,7 +446,7 @@ export default function AdminSettings() {
                             onChange={(e) => setProfileForm((p) => ({ ...p, email: e.target.value }))}
                             placeholder="admin@quizmaster.lk"
                             required
-                            className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-primary focus:bg-white"
+                            className="w-full px-4 py-3 mt-2 text-sm transition border outline-none rounded-2xl border-slate-200 bg-slate-50 focus:border-primary focus:bg-white"
                           />
                         </label>
                       </div>
@@ -456,16 +456,16 @@ export default function AdminSettings() {
                         <input
                           value={admin?.username || ''}
                           disabled
-                          className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-slate-400 outline-none cursor-not-allowed"
+                          className="w-full px-4 py-3 mt-2 text-sm border outline-none cursor-not-allowed rounded-2xl border-slate-200 bg-slate-100 text-slate-400"
                         />
                         <p className="mt-1 text-xs text-slate-400">Username cannot be changed for security reasons.</p>
                       </label>
 
-                      <div className="flex justify-end border-t border-slate-100 pt-5">
+                      <div className="flex justify-end pt-5 border-t border-slate-100">
                         <ButtonPrimary
                           type="submit"
                           disabled={isSavingProfile}
-                          className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-bold disabled:opacity-55"
+                          className="inline-flex items-center gap-2 py-3 text-sm font-bold rounded-full px-7 disabled:opacity-55"
                         >
                           {isSavingProfile ? (
                             <><Loader2 size={16} className="animate-spin" /> Saving...</>
@@ -482,9 +482,9 @@ export default function AdminSettings() {
                 {activeTab === 'security' && (
                   <div className="space-y-5">
                     <Card className="overflow-hidden rounded-[2rem] border border-surface-container-highest bg-white/80 shadow-soft">
-                      <div className="border-b border-slate-100 p-6">
+                      <div className="p-6 border-b border-slate-100">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-amber-50 text-amber-600">
+                          <div className="flex items-center justify-center w-10 h-10 rounded-2xl bg-amber-50 text-amber-600">
                             <KeyRound size={18} />
                           </div>
                           <div>
@@ -495,8 +495,8 @@ export default function AdminSettings() {
                       </div>
 
                       <form onSubmit={handleChangePassword} className="p-6 space-y-5">
-                        <div className="rounded-lg border border-amber-100 bg-amber-50/60 p-4">
-                          <p className="text-xs font-bold text-amber-700 mb-2">Password requirements</p>
+                        <div className="p-4 border rounded-lg border-amber-100 bg-amber-50/60">
+                          <p className="mb-2 text-xs font-bold text-amber-700">Password requirements</p>
                           <ul className="space-y-1">
                             {[
                               'Minimum 8 characters',
@@ -519,12 +519,12 @@ export default function AdminSettings() {
                               onChange={(e) => setPasswordForm((p) => ({ ...p, current_password: e.target.value }))}
                               placeholder="Enter current password"
                               required
-                              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 pr-12 text-sm outline-none transition focus:border-primary focus:bg-white"
+                              className="w-full px-4 py-3 pr-12 text-sm transition border outline-none rounded-2xl border-slate-200 bg-slate-50 focus:border-primary focus:bg-white"
                             />
                             <button
                               type="button"
                               onClick={() => setShowPasswords((p) => ({ ...p, current: !p.current }))}
-                              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                              className="absolute -translate-y-1/2 cursor-pointer right-4 top-1/2 text-slate-400 hover:text-slate-600"
                             >
                               {showPasswords.current ? <EyeOff size={16} /> : <Eye size={16} />}
                             </button>
@@ -540,12 +540,12 @@ export default function AdminSettings() {
                               onChange={(e) => setPasswordForm((p) => ({ ...p, new_password: e.target.value }))}
                               placeholder="Enter new password"
                               required
-                              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 pr-12 text-sm outline-none transition focus:border-primary focus:bg-white"
+                              className="w-full px-4 py-3 pr-12 text-sm transition border outline-none rounded-2xl border-slate-200 bg-slate-50 focus:border-primary focus:bg-white"
                             />
                             <button
                               type="button"
                               onClick={() => setShowPasswords((p) => ({ ...p, new: !p.new }))}
-                              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                              className="absolute -translate-y-1/2 cursor-pointer right-4 top-1/2 text-slate-400 hover:text-slate-600"
                             >
                               {showPasswords.new ? <EyeOff size={16} /> : <Eye size={16} />}
                             </button>
@@ -600,28 +600,28 @@ export default function AdminSettings() {
                             <button
                               type="button"
                               onClick={() => setShowPasswords((p) => ({ ...p, confirm: !p.confirm }))}
-                              className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                              className="absolute -translate-y-1/2 cursor-pointer right-4 top-1/2 text-slate-400 hover:text-slate-600"
                             >
                               {showPasswords.confirm ? <EyeOff size={16} /> : <Eye size={16} />}
                             </button>
                           </div>
                           {passwordForm.confirm_password && passwordForm.confirm_password !== passwordForm.new_password && (
-                            <p className="mt-1 flex items-center gap-1 text-xs font-semibold text-rose-500">
+                            <p className="flex items-center gap-1 mt-1 text-xs font-semibold text-rose-500">
                               <ShieldOff size={12} /> Passwords do not match
                             </p>
                           )}
                           {passwordForm.confirm_password && passwordForm.confirm_password === passwordForm.new_password && (
-                            <p className="mt-1 flex items-center gap-1 text-xs font-semibold text-emerald-600">
+                            <p className="flex items-center gap-1 mt-1 text-xs font-semibold text-emerald-600">
                               <CheckCircle2 size={12} /> Passwords match
                             </p>
                           )}
                         </label>
 
-                        <div className="flex justify-end border-t border-slate-100 pt-5">
+                        <div className="flex justify-end pt-5 border-t border-slate-100">
                           <ButtonPrimary
                             type="submit"
                             disabled={isSavingPassword}
-                            className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-bold disabled:opacity-55"
+                            className="inline-flex items-center gap-2 py-3 text-sm font-bold rounded-full px-7 disabled:opacity-55"
                           >
                             {isSavingPassword ? (
                               <><Loader2 size={16} className="animate-spin" /> Updating...</>
@@ -636,7 +636,7 @@ export default function AdminSettings() {
                     {/* Danger zone */}
                     <Card className="overflow-hidden rounded-[2rem] border border-rose-200 bg-rose-50/40 shadow-soft">
                       <div className="p-6">
-                        <h3 className="text-base font-black text-rose-700 flex items-center gap-2">
+                        <h3 className="flex items-center gap-2 text-base font-black text-rose-700">
                           <ShieldOff size={18} /> Danger Zone
                         </h3>
                         <p className="mt-1 text-sm text-rose-600/80">
@@ -657,9 +657,9 @@ export default function AdminSettings() {
                 {/* API KEYS TAB */}
                 {activeTab === 'api_keys' && (
                   <Card className="overflow-hidden rounded-[2rem] border border-surface-container-highest bg-white/80 shadow-soft">
-                    <div className="border-b border-slate-100 p-6">
+                    <div className="p-6 border-b border-slate-100">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600">
+                        <div className="flex items-center justify-center w-10 h-10 text-indigo-600 rounded-2xl bg-indigo-50">
                           <KeyRound size={18} />
                         </div>
                         <div>
@@ -670,10 +670,10 @@ export default function AdminSettings() {
                     </div>
 
                     <form onSubmit={handleSaveKey} className="p-6 space-y-5">
-                      <div className="rounded-lg border border-indigo-100 bg-indigo-50/60 p-4">
-                        <p className="text-xs font-bold text-indigo-700 mb-1">OpenRouter Integration</p>
-                        <p className="text-xs text-indigo-600 leading-relaxed">
-                          Your key is stored securely in the database. OpenRouter.ai provides access to Gemini, Gemma, and Poolside models. Get your key at <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" className="underline font-bold">openrouter.ai/keys</a>.
+                      <div className="p-4 border border-indigo-100 rounded-lg bg-indigo-50/60">
+                        <p className="mb-1 text-xs font-bold text-indigo-700">OpenRouter Integration</p>
+                        <p className="text-xs leading-relaxed text-indigo-600">
+                          Your key is stored securely in the database. OpenRouter.ai provides access to Gemini, Gemma, and Poolside models. Get your key at <a href="https://openrouter.ai/keys" target="_blank" rel="noopener noreferrer" className="font-bold underline">openrouter.ai/keys</a>.
                         </p>
                       </div>
 
@@ -685,23 +685,23 @@ export default function AdminSettings() {
                             value={openRouterKey}
                             onChange={(e) => setOpenRouterKey(e.target.value)}
                             placeholder="sk-or-v1-..."
-                            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 pr-12 text-sm outline-none transition focus:border-primary focus:bg-white"
+                            className="w-full px-4 py-3 pr-12 text-sm transition border outline-none rounded-2xl border-slate-200 bg-slate-50 focus:border-primary focus:bg-white"
                           />
                           <button
                             type="button"
                             onClick={() => setShowKey((v) => !v)}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                            className="absolute -translate-y-1/2 cursor-pointer right-4 top-1/2 text-slate-400 hover:text-slate-600"
                           >
                             {showKey ? <EyeOff size={16} /> : <Eye size={16} />}
                           </button>
                         </div>
                       </label>
 
-                      <div className="flex justify-end border-t border-slate-100 pt-5">
+                      <div className="flex justify-end pt-5 border-t border-slate-100">
                         <ButtonPrimary
                           type="submit"
                           disabled={isSavingKey}
-                          className="inline-flex items-center gap-2 rounded-full px-7 py-3 text-sm font-bold disabled:opacity-55"
+                          className="inline-flex items-center gap-2 py-3 text-sm font-bold rounded-full px-7 disabled:opacity-55"
                         >
                           {isSavingKey ? (
                             <><Loader2 size={16} className="animate-spin" /> Saving...</>

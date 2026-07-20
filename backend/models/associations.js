@@ -17,6 +17,12 @@ const UserAnswer = require("./userAnswer.model");
 const Badge = require("./badge.model");
 const UserBadge = require("./userBadge.model");
 const UserReview = require("./userReview.model");
+const LandingPageConfig = require("./landingPageConfig.model");
+const AdventureQuest = require("./adventureQuest.model");
+const DailyTrial = require("./dailyTrial.model");
+const UserAdventureProgress = require("./userAdventureProgress.model");
+const UserDailyTrialProgress = require("./userDailyTrialProgress.model");
+const UserDailyBonus = require("./userDailyBonus.model");
 
 // Grade - User relationship
 Grade.hasMany(User, {
@@ -345,6 +351,71 @@ UserReview.belongsTo(User, {
   as: "user",
 });
 
+// User - UserDailyBonus relationship (One-to-One)
+User.hasOne(UserDailyBonus, {
+  foreignKey: "user_id",
+  as: "dailyBonus",
+  onDelete: "CASCADE",
+});
+UserDailyBonus.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user",
+});
+
+// User - UserAdventureProgress relationship (One to Many)
+User.hasMany(UserAdventureProgress, {
+  foreignKey: "user_id",
+  as: "adventureProgress",
+  onDelete: "CASCADE",
+});
+UserAdventureProgress.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user",
+});
+
+// AdventureQuest - UserAdventureProgress relationship
+AdventureQuest.hasMany(UserAdventureProgress, {
+  foreignKey: "quest_id",
+  as: "userProgress",
+  onDelete: "CASCADE",
+});
+UserAdventureProgress.belongsTo(AdventureQuest, {
+  foreignKey: "quest_id",
+  as: "quest",
+});
+
+// AdventureQuest - Badge relationship
+AdventureQuest.belongsTo(Badge, {
+  foreignKey: "badge_id",
+  as: "badge",
+});
+Badge.hasMany(AdventureQuest, {
+  foreignKey: "badge_id",
+  as: "quests",
+});
+
+// User - UserDailyTrialProgress relationship
+User.hasMany(UserDailyTrialProgress, {
+  foreignKey: "user_id",
+  as: "dailyTrialProgress",
+  onDelete: "CASCADE",
+});
+UserDailyTrialProgress.belongsTo(User, {
+  foreignKey: "user_id",
+  as: "user",
+});
+
+// DailyTrial - UserDailyTrialProgress relationship
+DailyTrial.hasMany(UserDailyTrialProgress, {
+  foreignKey: "trial_id",
+  as: "userProgress",
+  onDelete: "CASCADE",
+});
+UserDailyTrialProgress.belongsTo(DailyTrial, {
+  foreignKey: "trial_id",
+  as: "trial",
+});
+
 module.exports = {
   Grade,
   User,
@@ -365,4 +436,10 @@ module.exports = {
   Badge,
   UserBadge,
   UserReview,
+  LandingPageConfig,
+  AdventureQuest,
+  DailyTrial,
+  UserAdventureProgress,
+  UserDailyTrialProgress,
+  UserDailyBonus,
 };
