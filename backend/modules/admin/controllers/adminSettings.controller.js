@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const Admin = require("../../../models/admin.model");
+const { LandingPageConfig } = require("../../../models/associations");
 
 /**
  * GET /admin/settings/profile
@@ -178,10 +179,77 @@ const updateOpenRouterKey = async (req, res, next) => {
   }
 };
 
+/**
+ * PUT /admin/settings/landing-page
+ * Update the landing page custom configurations (content, layout, uploads).
+ */
+const updateLandingPageConfig = async (req, res, next) => {
+  try {
+    let config = await LandingPageConfig.findOne();
+    if (!config) {
+      config = await LandingPageConfig.create({
+        logo_url: null,
+        icon_url: null,
+        theme_color: "indigo",
+        hero_title: "Master Every Subject",
+        hero_sinhala: "විෂය සියල්ල ජය ගන්න",
+        hero_desc: "Comprehensive practice for Mathematics, Sinhala, Environment & IQ — all in one place.",
+        hero_design: "design1",
+        subjects_design: "design1",
+        features_design: "design1",
+        testimonials_design: "design1",
+      });
+    }
+
+    const {
+      theme_color,
+      hero_title,
+      hero_sinhala,
+      hero_desc,
+      hero_design,
+      subjects_design,
+      features_design,
+      testimonials_design,
+    } = req.body || {};
+
+    if (theme_color !== undefined) config.theme_color = theme_color;
+    if (hero_title !== undefined) config.hero_title = hero_title;
+    if (hero_sinhala !== undefined) config.hero_sinhala = hero_sinhala;
+    if (hero_desc !== undefined) config.hero_desc = hero_desc;
+    if (hero_design !== undefined) config.hero_design = hero_design;
+    if (subjects_design !== undefined) config.subjects_design = subjects_design;
+    if (features_design !== undefined) config.features_design = features_design;
+    if (testimonials_design !== undefined) config.testimonials_design = testimonials_design;
+
+    if (req.files) {
+      const UPLOAD_CONFIG = require("../../../config/upload.config");
+      
+      if (req.files.file && req.files.file[0]) {
+        config.logo_url = UPLOAD_CONFIG.getUrlPath("profiles", req.files.file[0].filename);
+      }
+      
+      if (req.files.image && req.files.image[0]) {
+        config.icon_url = UPLOAD_CONFIG.getUrlPath("profiles", req.files.image[0].filename);
+      }
+    }
+
+    await config.save();
+
+    return res.status(200).json({
+      status: "success",
+      message: "Landing Page configuration updated successfully.",
+      data: config,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAdminProfile,
   updateAdminProfile,
   changeAdminPassword,
   getOpenRouterKey,
   updateOpenRouterKey,
+  updateLandingPageConfig,
 };
