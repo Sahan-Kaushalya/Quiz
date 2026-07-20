@@ -1,11 +1,12 @@
 const express = require("express");
 const { loginAdmin, registerAdmin } = require("./controllers/adminAuth.controller");
-const { getAllUsers, createUser, updateUser, deleteUser, getUserPerformance, getDashboardStats } = require("./controllers/adminUser.controller");
+const { getAllUsers, createUser, updateUser, deleteUser, getUserPerformance, getDashboardStats, toggleReviewVisibility } = require("./controllers/adminUser.controller");
 const { getAllQuizzes, createQuiz, updateQuiz, deleteQuiz } = require("./controllers/adminQuiz.controller");
-const { getAdminProfile, updateAdminProfile, changeAdminPassword, getOpenRouterKey, updateOpenRouterKey } = require("./controllers/adminSettings.controller");
+const { getAdminProfile, updateAdminProfile, changeAdminPassword, getOpenRouterKey, updateOpenRouterKey, updateLandingPageConfig } = require("./controllers/adminSettings.controller");
 const { generateQuizFromAI, chatWithAI } = require("./controllers/adminAI.controller");
+const { createAdventureQuest, createDailyTrial, getAdventureQuestsAdmin, getDailyTrialsAdmin } = require("./controllers/adminAdventure.controller");
 const { requireAdmin } = require("../../middleware/auth");
-const { uploadSingleFile, UPLOAD_CONFIG } = require("../../middleware/fileUpload");
+const { uploadSingleFile, uploadMultipleFiles, UPLOAD_CONFIG } = require("../../middleware/fileUpload");
 
 const adminRoutes = express.Router();
 
@@ -27,6 +28,7 @@ adminRoutes.put("/settings/profile", requireAdmin, uploadSingleFile("profiles"),
 adminRoutes.put("/settings/change-password", requireAdmin, changeAdminPassword);
 adminRoutes.get("/settings/openrouter-key", requireAdmin, getOpenRouterKey);
 adminRoutes.put("/settings/openrouter-key", requireAdmin, updateOpenRouterKey);
+adminRoutes.put("/settings/landing-page", requireAdmin, uploadMultipleFiles("profiles"), updateLandingPageConfig);
 adminRoutes.post("/ai-assistant/generate-quiz", requireAdmin, generateQuizFromAI);
 adminRoutes.post("/ai-assistant/chat", requireAdmin, chatWithAI);
 
@@ -36,6 +38,7 @@ adminRoutes.post("/users", requireAdmin, uploadSingleFile("profiles"), createUse
 adminRoutes.put("/users/:userId", requireAdmin, uploadSingleFile("profiles"), updateUser);
 adminRoutes.delete("/users/:userId", requireAdmin, deleteUser);
 adminRoutes.get("/users/:userId/performance", requireAdmin, getUserPerformance);
+adminRoutes.put("/users/:userId/review/visibility", requireAdmin, toggleReviewVisibility);
 adminRoutes.get("/dashboard-stats", requireAdmin, getDashboardStats);
 
 // Quizzes CRUD Routes
@@ -66,5 +69,11 @@ adminRoutes.post("/quizzes/upload-image", requireAdmin, uploadSingleFile("quiz-q
     });
   }
 });
+
+// Admin Adventure Routes
+adminRoutes.get("/adventure/quests", requireAdmin, getAdventureQuestsAdmin);
+adminRoutes.post("/adventure/quests", requireAdmin, createAdventureQuest);
+adminRoutes.get("/adventure/daily-trials", requireAdmin, getDailyTrialsAdmin);
+adminRoutes.post("/adventure/daily-trials", requireAdmin, createDailyTrial);
 
 module.exports = adminRoutes;
