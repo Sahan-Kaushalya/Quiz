@@ -714,6 +714,42 @@ const toggleReviewVisibility = async (req, res, next) => {
   }
 };
 
+/**
+ * Change a user's password by Admin.
+ */
+const changeUserPassword = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const { newPassword } = req.body || {};
+
+    if (!newPassword || newPassword.trim().length < 6) {
+      return res.status(400).json({
+        status: "fail",
+        message: "New password must be at least 6 characters long",
+      });
+    }
+
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({
+        status: "fail",
+        message: "User not found",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+
+    return res.status(200).json({
+      status: "success",
+      message: "User password changed successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAllUsers,
   createUser,
@@ -722,4 +758,5 @@ module.exports = {
   getUserPerformance,
   getDashboardStats,
   toggleReviewVisibility,
+  changeUserPassword,
 };

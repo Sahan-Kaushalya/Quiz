@@ -30,6 +30,7 @@ const NAV_ITEMS = [
 	{ label: 'Dashboard', icon: LayoutDashboard, to: '/dashboard' },
 	{ label: 'Quizzes', icon: BookOpen, to: '/dashboard' },
 	{ label: 'Past Papers', icon: FileText, to: '/past-papers' },
+	{ label: 'Adventure', icon: Map, to: '/adventure' },
 	{ label: 'Leading', icon: Trophy, to: '/leading' },
 	{ label: 'Profile', icon: CircleUser, to: '/profile', active: true },
 ];
@@ -134,11 +135,20 @@ const getBadgeStyles = (badge) => {
 	}
 };
 
-const getBadgeImageUrl = (iconUrl) => {
+const getBadgeImageUrl = (iconUrl, seedName = 'badge') => {
 	const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api/v1";
-	if (!iconUrl) return '';
-	if (iconUrl.startsWith('http')) return iconUrl;
-	return `${API_BASE_URL}/uploads${iconUrl}`;
+	if (!iconUrl) return `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(seedName)}`;
+	if (iconUrl.startsWith('http://') || iconUrl.startsWith('https://')) return iconUrl;
+	if (iconUrl.startsWith('/api/v1/uploads/')) {
+		return `${API_BASE_URL.replace('/api/v1', '')}${iconUrl}`;
+	}
+	if (iconUrl.startsWith('/uploads/')) {
+		return `${API_BASE_URL.replace('/api/v1', '')}/api/v1${iconUrl}`;
+	}
+	if (iconUrl.startsWith('/badges/')) {
+		return `${API_BASE_URL}/uploads${iconUrl}`;
+	}
+	return `${API_BASE_URL}/uploads/badges/${iconUrl}`;
 };
 
 const getBadgeItem = (badge) => {
@@ -151,7 +161,7 @@ const getBadgeItem = (badge) => {
 		border: mappedStyles.border,
 		text: mappedStyles.text,
 		locked: mappedStyles.locked || false,
-		imgUrl: getBadgeImageUrl(badge.icon_url),
+		imgUrl: getBadgeImageUrl(badge.icon_url, badge.name),
 	};
 };
 

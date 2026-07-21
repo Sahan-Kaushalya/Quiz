@@ -22,6 +22,7 @@ import {
   Users,
   X,
   Map,
+  Key,
 } from 'lucide-react';
 import Footer from '../../ui/Footer';
 import { AdminHeader, AdminSidebar, ButtonPrimary, Card, ToastContainer, useToast } from '../../ui';
@@ -71,6 +72,56 @@ export default function AdminUserManage() {
   const [performanceUser, setPerformanceUser] = useState(null);
   const [performanceData, setPerformanceData] = useState({ quizAttempts: [], badges: [] });
   const [isPerformanceLoading, setIsPerformanceLoading] = useState(false);
+
+  // Password Reset Modal State
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [passwordUser, setPasswordUser] = useState(null);
+  const [newPassword, setNewPassword] = useState('');
+  const [isPasswordSubmitting, setIsPasswordSubmitting] = useState(false);
+
+  const handleOpenPasswordModal = (user) => {
+    setPasswordUser(user);
+    setNewPassword('');
+    setIsPasswordModalOpen(true);
+  };
+
+  const handlePasswordReset = async (e) => {
+    e.preventDefault();
+    if (!newPassword || newPassword.trim().length < 6) {
+      toast.error('Password must be at least 6 characters long.');
+      return;
+    }
+
+    const session = getAuthSession();
+    if (!session?.tokens?.accessToken) {
+      toast.error('Authorization expired. Please login again.');
+      return;
+    }
+
+    setIsPasswordSubmitting(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/users/${passwordUser.id}/change-password`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.tokens.accessToken}`,
+        },
+        body: JSON.stringify({ newPassword }),
+      });
+
+      const resData = await response.json();
+      if (!response.ok) {
+        throw new Error(resData?.message || 'Failed to change password.');
+      }
+
+      toast.success(`Successfully changed password for ${passwordUser.fullname}!`);
+      setIsPasswordModalOpen(false);
+    } catch (err) {
+      toast.error(err.message || 'Error changing password.');
+    } finally {
+      setIsPasswordSubmitting(false);
+    }
+  };
 
   const handleOpenPerformanceModal = async (user) => {
     setPerformanceUser(user);
@@ -590,6 +641,14 @@ export default function AdminUserManage() {
                                 <Eye size={16} />
                               </button>
                               <button
+                                onClick={() => handleOpenPasswordModal(user)}
+                                className="rounded-full p-2 text-slate-500 transition hover:bg-amber-50 hover:text-amber-600 cursor-pointer"
+                                title="Change Password"
+                                aria-label={`Change password of ${user.fullname}`}
+                              >
+                                <Key size={16} />
+                              </button>
+                              <button
                                 onClick={() => handleOpenEditModal(user)}
                                 className="rounded-full p-2 text-slate-500 transition hover:bg-primary-fixed hover:text-primary cursor-pointer"
                                 aria-label={`Edit ${user.fullname}`}
@@ -847,6 +906,72 @@ export default function AdminUserManage() {
                       </>
                     ) : (
                       'Save Student'
+                    )}
+                  </ButtonPrimary>
+                </div>
+              </form>
+            </div>
+          </div>
+        ) : null}
+
+        {/* Change Password Modal */}
+        {isPasswordModalOpen && passwordUser ? (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-4 py-6 backdrop-blur-sm">
+            <div className="w-full max-w-5xl rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                <div className="flex items-center gap-2 text-amber-600">
+                  <Key size={20} />
+                  <h3 className="text-lg font-black text-slate-900">Change User Password</h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsPasswordModalOpen(false)}
+                  className="rounded-full border border-slate-200 p-1.5 text-slate-500 transition hover:bg-slate-100 cursor-pointer"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              <form onSubmit={handlePasswordReset} className="mt-4 space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider">Student Name</label>
+                  <p className="mt-1 text-sm font-semibold text-slate-800 bg-slate-50 px-3 py-2 rounded-xl border border-slate-100">
+                    {passwordUser.fullname} ({passwordUser.username})
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">New Password</label>
+                  <input
+                    type="password"
+                    placeholder="Enter at least 6 characters"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    required
+                    minLength={6}
+                    className="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm outline-none transition focus:border-primary focus:bg-white"
+                  />
+                </div>
+
+                <div className="flex items-center justify-end gap-3 pt-2 border-t border-slate-100">
+                  <button
+                    type="button"
+                    onClick={() => setIsPasswordModalOpen(false)}
+                    className="rounded-full border border-slate-200 bg-white px-5 py-2.5 text-sm font-bold text-slate-600 transition hover:bg-slate-100 cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <ButtonPrimary
+                    type="submit"
+                    disabled={isPasswordSubmitting}
+                    className="cursor-pointer"
+                  >
+                    {isPasswordSubmitting ? (
+                      <span className="flex items-center gap-2">
+                        <Loader2 className="animate-spin" size={16} /> Saving...
+                      </span>
+                    ) : (
+                      'Save Password'
                     )}
                   </ButtonPrimary>
                 </div>

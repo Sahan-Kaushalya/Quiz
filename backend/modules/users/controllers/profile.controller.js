@@ -53,7 +53,7 @@ const getUserProfileWithRank = async (req, res, next) => {
 			attributes: ["id", "current_xp"],
 			order: [["current_xp", "DESC"]],
 		});
-		const rankIndex = allUsers.findIndex(u => u.id === userId);
+		const rankIndex = allUsers.findIndex(u => Number(u.id) === Number(userId));
 		const rank = rankIndex !== -1 ? rankIndex + 1 : 1;
 
 		// Calculate progress to next level

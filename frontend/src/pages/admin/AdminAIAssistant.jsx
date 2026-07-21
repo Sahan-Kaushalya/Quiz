@@ -29,6 +29,7 @@ import {
   RotateCw,
   MoreHorizontal,
   Share2,
+  Map,
 } from 'lucide-react';
 import Footer from '../../ui/Footer';
 import { AdminHeader, AdminSidebar, ButtonPrimary, ButtonSecondary, Card, ToastContainer, useToast } from '../../ui';
@@ -40,6 +41,7 @@ const NAV_ITEMS = [
   { label: 'Quizzes', icon: FileText, to: '/admin/quizzes' },
   { label: 'Past Papers', icon: ShieldCheck, to: '/admin/past-papers' },
   { label: 'Users', icon: Users, to: '/admin/users' },
+  { label: 'Adventure', icon: Map, to: '/admin/adventure' },
   { label: 'AI Assistant', icon: Sparkles, to: '/admin/ai-assistant', active: true },
   { label: 'Settings', icon: Settings, to: '/admin/settings' },
 ];
