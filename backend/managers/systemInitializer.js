@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const { UserLevel, Badge, LandingPageConfig } = require("../models/associations");
+const { UserLevel, Badge, LandingPageConfig, Zone } = require("../models/associations");
 const Admin = require("../models/admin.model");
 const xpManager = require("./xpManager");
 const badgeManager = require("./badgeManager");
@@ -11,6 +11,64 @@ const initializeSystemData = async () => {
 	try {
 		console.log("🔄 Initializing system data...");
 
+		// Ensure hearts and last_heart_lost_at exist on users table
+		const sequelize = require("../config/db.config");
+		const [columns] = await sequelize.query("SHOW COLUMNS FROM users");
+		const hasHearts = columns.some(c => c.Field === "hearts");
+		const hasLastHeartLost = columns.some(c => c.Field === "last_heart_lost_at");
+		if (!hasHearts) {
+			console.log("Adding 'hearts' column to 'users' table...");
+			await sequelize.query("ALTER TABLE users ADD COLUMN hearts INT NOT NULL DEFAULT 3");
+		}
+		if (!hasLastHeartLost) {
+			console.log("Adding 'last_heart_lost_at' column to 'users' table...");
+			await sequelize.query("ALTER TABLE users ADD COLUMN last_heart_lost_at DATETIME DEFAULT NULL");
+		}
+
+		// Ensure target_type, target_value, time_limit, and score_limit exist on badges table
+		const [badgeColumns] = await sequelize.query("SHOW COLUMNS FROM badges");
+		const hasTargetType = badgeColumns.some(c => c.Field === "target_type");
+		const hasTargetValue = badgeColumns.some(c => c.Field === "target_value");
+		const hasTimeLimit = badgeColumns.some(c => c.Field === "time_limit");
+		const hasScoreLimit = badgeColumns.some(c => c.Field === "score_limit");
+		if (!hasTargetType) {
+			console.log("Adding 'target_type' column to 'badges' table...");
+			await sequelize.query("ALTER TABLE badges ADD COLUMN target_type VARCHAR(50) DEFAULT NULL");
+		}
+		if (!hasTargetValue) {
+			console.log("Adding 'target_value' column to 'badges' table...");
+			await sequelize.query("ALTER TABLE badges ADD COLUMN target_value VARCHAR(100) DEFAULT NULL");
+		}
+		if (!hasTimeLimit) {
+			console.log("Adding 'time_limit' column to 'badges' table...");
+			await sequelize.query("ALTER TABLE badges ADD COLUMN time_limit INT DEFAULT NULL");
+		}
+		if (!hasScoreLimit) {
+			console.log("Adding 'score_limit' column to 'badges' table...");
+			await sequelize.query("ALTER TABLE badges ADD COLUMN score_limit INT DEFAULT NULL");
+		}
+
+		// Ensure is_active and sort_order exist on zones table
+		try {
+			const [zoneColumns] = await sequelize.query("SHOW COLUMNS FROM zones");
+			const hasZoneActive = zoneColumns.some(c => c.Field === "is_active");
+			if (!hasZoneActive) {
+				console.log("Adding 'is_active' column to 'zones' table...");
+				await sequelize.query("ALTER TABLE zones ADD COLUMN is_active TINYINT(1) NOT NULL DEFAULT 1");
+			}
+			const hasSortOrder = zoneColumns.some(c => c.Field === "sort_order");
+			if (!hasSortOrder) {
+				console.log("Adding 'sort_order' column to 'zones' table...");
+				await sequelize.query("ALTER TABLE zones ADD COLUMN sort_order INT NOT NULL DEFAULT 1");
+				// Assign default order to existing zones
+				await sequelize.query("UPDATE zones SET sort_order = 1 WHERE id = 'grasslands'");
+				await sequelize.query("UPDATE zones SET sort_order = 2 WHERE id = 'crystal'");
+				await sequelize.query("UPDATE zones SET sort_order = 3 WHERE id = 'volcanic'");
+			}
+		} catch (zoneColErr) {
+			console.error("Error verifying/altering zones columns:", zoneColErr);
+		}
+
 		// Initialize user levels
 		const levelsCount = await UserLevel.count();
 		if (levelsCount === 0) {
@@ -19,6 +77,62 @@ const initializeSystemData = async () => {
 			console.log(`✓ Created ${levels.length} user levels`);
 		} else {
 			console.log(`✓ User levels already exist (${levelsCount} levels)`);
+		}
+
+		// Initialize Zones
+		const zonesCount = await Zone.count();
+		if (zonesCount === 0) {
+			console.log("🗺️ Creating default adventure zones...");
+			await Zone.bulkCreate([
+				{
+					id: "grasslands",
+					name: "Zone 1: The Grasslands",
+					short_name: "Grasslands",
+					xp: 300,
+					gradient: "from-emerald-400 to-teal-500",
+					border_color: "border-emerald-300",
+					shadow_color: "shadow-emerald-200",
+					bg_light: "bg-emerald-50",
+					image_url: "https://lh3.googleusercontent.com/aida-public/AB6AXuAAPwAsqYXSqgRrDSbL2Vtz_JdOi3q-ezfH_HOuDUWuL-GY9kM9hMBGroA4efJ0RFELkTWVdXyJnABoE8QY3K-gh6bZdp5_w2zPrjrDYHoW7saiLdqN3OUDTHEmlvMnj26HPLtdkaP5KBu8e5CdZ05XxU_aB9GBZk0flcc-HHn3rDp6guiDS8nMij_bF2UBTLM_e6TAqdCA7pI7mdKr-C4fMUVi5dsG7eYn_4X3RQS1Syn7WZKd8_9O5lNZsYLbrgyV4wToKwMl-AM",
+					pos_x: 60,
+					pos_y: 180,
+					delay: "0s",
+					sort_order: 1
+				},
+				{
+					id: "crystal",
+					name: "Zone 2: Crystal Peaks",
+					short_name: "Crystal Peaks",
+					xp: 500,
+					gradient: "from-blue-500 to-indigo-600",
+					border_color: "border-primary",
+					shadow_color: "shadow-indigo-200",
+					bg_light: "bg-blue-50",
+					image_url: "https://lh3.googleusercontent.com/aida-public/AB6AXuAgWyJjog-y8BnwZRVF23NUl8Xy-6uku7L-75LpmyGnye2UuNKD1reLAFRlPRGqef6c9utqqZgoxfbclSBmCQSTF6BAw7NGE6RBNoBoO98RO1_BAs4BgvCXAR_uhNejcYM5HsaNYZLvkbGCio215dOUTUBcFOL11ky0bbGYnsKU2_0kv1uX_Sb-DIJ2wDNnz3XEBBBPiAk-1qsdaz55H1ecu-IaAIDp8BDzoiXAk0C-ffbwYK8_ioFwPnvoenWiyYBuWKwtO1xoQFE",
+					pos_x: 420,
+					pos_y: 360,
+					delay: "1.5s",
+					sort_order: 2
+				},
+				{
+					id: "volcanic",
+					name: "Zone 3: Volcanic Forge",
+					short_name: "Volcanic Forge",
+					xp: 800,
+					gradient: "from-orange-400 to-red-500",
+					border_color: "border-orange-200",
+					shadow_color: "shadow-orange-100",
+					bg_light: "bg-orange-50",
+					image_url: "https://lh3.googleusercontent.com/aida-public/AB6AXuASgZju6Ac6ixylRarqD6PBtzNJi0Pwd_SSNJjpg03vwUnZStFwL6TzG0YvBi1NYuaemZjlDLrE7m61uRCX7103B8FxzYyXILlkf3t2VhmDzJl8SrhqXRELv7jGrZ-8vOuvA-cTLjYDCu9weQGKPyZWPqYaum-6R2c5gTApeFQ3qYTxWdRBjR3X1v-m67ONk-58AU8x6durwat_Y8onSB-GvzgX-OmGW33A1pFfnsBuGzAHASYVGrdTQGLqxs0jXHy2bIaeWGGlx3s",
+					pos_x: 960,
+					pos_y: 650,
+					delay: "3s",
+					sort_order: 3
+				}
+			]);
+			console.log("✓ Default adventure zones seeded successfully!");
+		} else {
+			console.log(`✓ Adventure zones already exist (${zonesCount} zones)`);
 		}
 
 		// Initialize badges
@@ -394,6 +508,9 @@ const initializeSystemData = async () => {
 			console.log("✓ Daily trials seeded successfully!");
 		}
 
+		// Recalculate all user levels to fix stuck levels
+		await xpManager.recalculateAllUserLevels();
+ 
 		console.log("✓ System data initialization complete!");
 		return true;
 	} catch (error) {
