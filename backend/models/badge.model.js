@@ -28,6 +28,22 @@ const Badge = sequelize.define(
 			allowNull: true,
 			comment: "XP required to unlock this badge",
 		},
+		target_type: {
+			type: DataTypes.STRING(50),
+			allowNull: true,
+		},
+		target_value: {
+			type: DataTypes.STRING(100),
+			allowNull: true,
+		},
+		time_limit: {
+			type: DataTypes.INTEGER,
+			allowNull: true,
+		},
+		score_limit: {
+			type: DataTypes.INTEGER,
+			allowNull: true,
+		},
 		badge_type: {
 			type: DataTypes.ENUM("achievement", "milestone", "streak", "special"),
 			allowNull: false,
