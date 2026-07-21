@@ -16,6 +16,14 @@ const getUserProfileWithRank = async (req, res, next) => {
 			});
 		}
 
+		// Proactively check and award any qualified badges (e.g. First Steps, milestones, etc.)
+		const badgeManager = require("../../../managers/badgeManager");
+		try {
+			await badgeManager.checkAndAwardBadges(userId);
+		} catch (badgeErr) {
+			console.error("Error auto-awarding badges on profile load:", badgeErr);
+		}
+
 		// Get user data with level info and grade info
 		const user = await User.findOne({
 			where: { id: userId },
@@ -40,14 +48,13 @@ const getUserProfileWithRank = async (req, res, next) => {
 			});
 		}
 
-		// Calculate global rank - count users with more XP
-		const rank = await User.count({
-			where: sequelize.where(
-				sequelize.col("current_xp"),
-				">",
-				user.current_xp
-			),
+		// Calculate global rank by sorting all users by current_xp DESC
+		const allUsers = await User.findAll({
+			attributes: ["id", "current_xp"],
+			order: [["current_xp", "DESC"]],
 		});
+		const rankIndex = allUsers.findIndex(u => u.id === userId);
+		const rank = rankIndex !== -1 ? rankIndex + 1 : 1;
 
 		// Calculate progress to next level
 		const nextLevel = await UserLevel.findOne({
@@ -183,7 +190,7 @@ const getUserProfileWithRank = async (req, res, next) => {
 					level_name: user.currentLevel?.level_name,
 					xp_required: user.currentLevel?.xp_required,
 				},
-				rank: rank + 1, // rank + 1 because count returns users with MORE xp
+				rank: rank,
 				xp_progress: {
 					current: xpInCurrentLevel,
 					needed: xpNeededForNextLevel,
