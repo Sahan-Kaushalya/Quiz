@@ -64,7 +64,7 @@ const getSubjectRank = async (userId, subjectName) => {
 
 		rankedList.sort((a, b) => b.xp - a.xp);
 		
-		const userIndex = rankedList.findIndex(item => item.id === userId);
+		const userIndex = rankedList.findIndex(item => Number(item.id) === Number(userId));
 		if (userIndex === -1) return 999;
 		
 		const userXp = userXpMap[userId] || 0;
