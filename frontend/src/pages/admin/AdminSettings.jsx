@@ -19,6 +19,7 @@ import {
   User,
   Users,
   X,
+  Map,
 } from 'lucide-react';
 import Footer from '../../ui/Footer';
 import { AdminHeader, AdminSidebar, ButtonPrimary, Card, ToastContainer, useToast } from '../../ui';
@@ -30,6 +31,7 @@ const NAV_ITEMS = [
   { label: 'Quizzes', icon: FileText, to: '/admin/quizzes' },
   { label: 'Past Papers', icon: ShieldCheck, to: '/admin/past-papers' },
   { label: 'Users', icon: Users, to: '/admin/users' },
+  { label: 'Adventure', icon: Map, to: '/admin/adventure' },
   { label: 'AI Assistant', icon: Sparkles, to: '/admin/ai-assistant' },
   { label: 'Settings', icon: Settings, to: '/admin/settings', active: true },
 ];
@@ -54,6 +56,7 @@ const TABS = [
   { id: 'profile', label: 'Profile', icon: User },
   { id: 'security', label: 'Security', icon: Lock },
   { id: 'api_keys', label: 'API Keys', icon: KeyRound },
+  { id: 'landing_page', label: 'Landing Page', icon: LayoutDashboard},
 ];
 
 export default function AdminSettings() {
@@ -63,6 +66,26 @@ export default function AdminSettings() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
+
+  // Landing Page Customization States
+  const [landingPageConfig, setLandingPageConfig] = useState({
+    theme_color: 'indigo',
+    hero_title: 'Master Every Subject',
+    hero_sinhala: 'විෂය සියල්ල ජය ගන්න',
+    hero_desc: 'Comprehensive practice for Mathematics, Sinhala, Environment & IQ — all in one place.',
+    hero_design: 'design1',
+    subjects_design: 'design1',
+    features_design: 'design1',
+    testimonials_design: 'design1',
+    logo_url: '',
+    icon_url: '',
+  });
+
+  const [logoFile, setLogoFile] = useState(null);
+  const [logoPreview, setLogoPreview] = useState(null);
+  const [iconFile, setIconFile] = useState(null);
+  const [iconPreview, setIconPreview] = useState(null);
+  const [isSavingLandingPage, setIsSavingLandingPage] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const [admin, setAdmin] = useState(null);
@@ -115,6 +138,13 @@ export default function AdminSettings() {
       if (keyResponse.ok && keyJson?.data) {
         setOpenRouterKey(keyJson.data.openrouter_key || '');
       }
+
+      // Fetch Landing Page Config
+      const configRes = await fetch(`${API_BASE_URL}/app/config/landing-page`);
+      const configJson = await configRes.json();
+      if (configRes.ok && configJson?.data) {
+        setLandingPageConfig(configJson.data);
+      }
     } catch (err) {
       toast.error(err.message || 'Could not load admin profile.');
     } finally {
@@ -146,6 +176,55 @@ export default function AdminSettings() {
       toast.error(err.message || 'Could not save API key.');
     } finally {
       setIsSavingKey(false);
+    }
+  };
+
+  const handleSaveLandingPage = async (e) => {
+    e.preventDefault();
+    const session = getAuthSession();
+    if (!session?.tokens?.accessToken) {
+      navigate('/admin/login');
+      return;
+    }
+
+    setIsSavingLandingPage(true);
+    try {
+      const payload = new FormData();
+      payload.append('theme_color', landingPageConfig.theme_color);
+      payload.append('hero_title', landingPageConfig.hero_title);
+      payload.append('hero_sinhala', landingPageConfig.hero_sinhala);
+      payload.append('hero_desc', landingPageConfig.hero_desc);
+      payload.append('hero_design', landingPageConfig.hero_design);
+      payload.append('subjects_design', landingPageConfig.subjects_design);
+      payload.append('features_design', landingPageConfig.features_design);
+      payload.append('testimonials_design', landingPageConfig.testimonials_design);
+
+      if (logoFile) payload.append('file', logoFile);
+      if (iconFile) payload.append('image', iconFile);
+
+      const response = await fetch(`${API_BASE_URL}/admin/settings/landing-page`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${session.tokens.accessToken}`,
+        },
+        body: payload,
+      });
+
+      const resJson = await response.json();
+      if (!response.ok) throw new Error(resJson?.message || 'Failed to update Landing Page settings.');
+
+      toast.success('Landing Page settings updated successfully! 🎨');
+      setLandingPageConfig(resJson.data);
+      setLogoFile(null);
+      setLogoPreview(null);
+      setIconFile(null);
+      setIconPreview(null);
+      // Dispatch event to trigger Landing Page content refresh if loaded
+      window.dispatchEvent(new Event('landingPageConfigUpdated'));
+    } catch (err) {
+      toast.error(err.message || 'Could not update Landing Page settings.');
+    } finally {
+      setIsSavingLandingPage(false);
     }
   };
 
@@ -707,6 +786,267 @@ export default function AdminSettings() {
                             <><Loader2 size={16} className="animate-spin" /> Saving...</>
                           ) : (
                             <><Save size={16} /> Save API Key</>
+                          )}
+                        </ButtonPrimary>
+                      </div>
+                    </form>
+                  </Card>
+                )}
+
+                {/* LANDING PAGE CUSTOMIZATION TAB */}
+                {activeTab === 'landing_page' && (
+                  <Card className="overflow-hidden rounded-[2rem] border border-surface-container-highest bg-white/80 shadow-soft">
+                    <div className="p-6 border-b border-slate-100">
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center justify-center w-10 h-10 rounded-2xl bg-primary-fixed text-primary">
+                          <LayoutDashboard  size={18} />
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-black text-slate-900">Landing Page Customization</h3>
+                          <p className="text-sm text-slate-500">Configure content, logo, icon, and layouts for the public Landing Page.</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <form onSubmit={handleSaveLandingPage} className="p-6 space-y-6">
+                      {/* Theme selection */}
+                      <div>
+                        <p className="text-sm font-bold text-slate-700 mb-3">Theme Accent Color</p>
+                        <div className="flex flex-wrap items-center gap-4">
+                          {[
+                            { color: 'indigo', hex: 'bg-indigo-600 border-indigo-700' },
+                            { color: 'emerald', hex: 'bg-emerald-500 border-emerald-600' },
+                            { color: 'violet', hex: 'bg-violet-600 border-violet-700' },
+                            { color: 'rose', hex: 'bg-rose-500 border-rose-600' },
+                            { color: 'sky', hex: 'bg-sky-400 border-sky-500' },
+                          ].map((theme) => (
+                            <button
+                              key={theme.color}
+                              type="button"
+                              onClick={() => setLandingPageConfig((p) => ({ ...p, theme_color: theme.color }))}
+                              className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all cursor-pointer hover:scale-110 active:scale-95 ${theme.hex} ${
+                                landingPageConfig.theme_color === theme.color
+                                  ? 'ring-4 ring-slate-900/10 scale-105'
+                                  : 'opacity-80'
+                              }`}
+                              title={`${theme.color.toUpperCase()} Theme`}
+                            >
+                              {landingPageConfig.theme_color === theme.color && (
+                                <CheckCircle2 size={16} className="text-white fill-slate-900/10" />
+                              )}
+                            </button>
+                          ))}
+                          <span className="text-xs font-extrabold uppercase bg-slate-100 text-slate-600 rounded-full px-3 py-1">
+                            Active: {landingPageConfig.theme_color}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* File uploads */}
+                      <div className="grid gap-6 md:grid-cols-2">
+                        {/* Logo upload */}
+                        <div className="p-4 border border-slate-200 rounded-lg bg-slate-50/50">
+                          <p className="text-sm font-semibold text-slate-700 mb-2">Website Logo</p>
+                          <div className="flex items-center gap-4">
+                            <div className="h-16 w-16 bg-white rounded-xl border border-slate-100 flex items-center justify-center p-2 overflow-hidden shadow-xs">
+                              {logoPreview || landingPageConfig.logo_url ? (
+                                <img
+                                  src={logoPreview || (landingPageConfig.logo_url?.startsWith('/') ? `${API_BASE_URL.replace('/api/v1', '')}${landingPageConfig.logo_url}` : landingPageConfig.logo_url)}
+                                  alt="Logo Preview"
+                                  className="object-contain w-full h-full"
+                                  onError={(e) => {
+                                    e.target.src = logoicon;
+                                  }}
+                                />
+                              ) : (
+                                <img src={logoicon} alt="Default Logo" className="object-contain w-full h-full" />
+                              )}
+                            </div>
+                            <div className="flex-1">
+                              <input
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp,image/svg+xml"
+                                className="block w-full text-xs text-slate-500 file:mr-3 file:rounded-full file:border-0 file:bg-primary-fixed file:px-4 file:py-2 file:text-xs file:font-semibold file:text-primary file:cursor-pointer"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    setLogoFile(file);
+                                    setLogoPreview(URL.createObjectURL(file));
+                                  }
+                                }}
+                              />
+                              {logoPreview && (
+                                <button
+                                  type="button"
+                                  onClick={() => { setLogoPreview(null); setLogoFile(null); }}
+                                  className="text-xs text-rose-500 hover:underline mt-1 font-semibold block"
+                                >
+                                  Reset file selection
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Favicon/Icon upload */}
+                        <div className="p-4 border border-slate-200 rounded-lg bg-slate-50/50">
+                          <p className="text-sm font-semibold text-slate-700 mb-2">Website Favicon/Icon</p>
+                          <div className="flex items-center gap-4">
+                            <div className="h-16 w-16 bg-white rounded-xl border border-slate-100 flex items-center justify-center p-3 overflow-hidden shadow-xs">
+                              {iconPreview || landingPageConfig.icon_url ? (
+                                <img
+                                  src={iconPreview || (landingPageConfig.icon_url?.startsWith('/') ? `${API_BASE_URL.replace('/api/v1', '')}${landingPageConfig.icon_url}` : landingPageConfig.icon_url)}
+                                  alt="Icon Preview"
+                                  className="object-contain w-full h-full"
+                                  onError={(e) => {
+                                    e.target.src = logoicon;
+                                  }}
+                                />
+                              ) : (
+                                <img src={logoicon} alt="Default Icon" className="object-contain w-full h-full" />
+                              )}
+                            </div>
+                            <div className="flex-1">
+                              <input
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp,image/svg+xml"
+                                className="block w-full text-xs text-slate-500 file:mr-3 file:rounded-full file:border-0 file:bg-primary-fixed file:px-4 file:py-2 file:text-xs file:font-semibold file:text-primary file:cursor-pointer"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    setIconFile(file);
+                                    setIconPreview(URL.createObjectURL(file));
+                                  }
+                                }}
+                              />
+                              {iconPreview && (
+                                <button
+                                  type="button"
+                                  onClick={() => { setIconPreview(null); setIconFile(null); }}
+                                  className="text-xs text-rose-500 hover:underline mt-1 font-semibold block"
+                                >
+                                  Reset file selection
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Hero content */}
+                      <div className="space-y-4 border-t border-slate-100 pt-5">
+                        <p className="text-sm font-bold text-slate-900">Hero Section Content</p>
+                        
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <label className="block text-sm font-semibold text-slate-700">
+                            Hero Title (English)
+                            <input
+                              value={landingPageConfig.hero_title}
+                              onChange={(e) => setLandingPageConfig((p) => ({ ...p, hero_title: e.target.value }))}
+                              placeholder="e.g. Master Every Subject"
+                              required
+                              className="w-full px-4 py-3 mt-2 text-sm transition border outline-none rounded-2xl border-slate-200 bg-slate-50 focus:border-primary focus:bg-white"
+                            />
+                          </label>
+
+                          <label className="block text-sm font-semibold text-slate-700">
+                            Hero Title (Sinhala)
+                            <input
+                              value={landingPageConfig.hero_sinhala}
+                              onChange={(e) => setLandingPageConfig((p) => ({ ...p, hero_sinhala: e.target.value }))}
+                              placeholder="e.g. විෂය සියල්ල ජය ගන්න"
+                              required
+                              className="w-full px-4 py-3 mt-2 text-sm transition border outline-none rounded-2xl border-slate-200 bg-slate-50 focus:border-primary focus:bg-white"
+                            />
+                          </label>
+                        </div>
+
+                        <label className="block text-sm font-semibold text-slate-700">
+                          Hero Description
+                          <textarea
+                            value={landingPageConfig.hero_desc}
+                            onChange={(e) => setLandingPageConfig((p) => ({ ...p, hero_desc: e.target.value }))}
+                            placeholder="Type the description here..."
+                            required
+                            rows={3}
+                            className="w-full px-4 py-3 mt-2 text-sm transition border outline-none rounded-lg border-slate-200 bg-slate-50 focus:border-primary focus:bg-white resize-none"
+                          />
+                        </label>
+                      </div>
+
+                      {/* Layout designs */}
+                      <div className="space-y-4 border-t border-slate-100 pt-5">
+                        <p className="text-sm font-bold text-slate-900">Section Layout Designs (Pre-made options)</p>
+
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          {/* Hero design */}
+                          <label className="block text-sm font-semibold text-slate-700">
+                            Hero Section Layout
+                            <select
+                              value={landingPageConfig.hero_design}
+                              onChange={(e) => setLandingPageConfig((p) => ({ ...p, hero_design: e.target.value }))}
+                              className="w-full px-4 py-3 mt-2 text-sm border outline-none rounded-2xl border-slate-200 bg-slate-50 focus:border-primary focus:bg-white"
+                            >
+                              <option value="design1">Option 1: Carousel Slider & Right Emoji</option>
+                              <option value="design2">Option 2: Modern Split Grid + Accent Badges</option>
+                              <option value="design3">Option 3: Centered Minimalist Glass Banner</option>
+                            </select>
+                          </label>
+
+                          {/* Subjects design */}
+                          <label className="block text-sm font-semibold text-slate-700">
+                            Subjects Section Layout
+                            <select
+                              value={landingPageConfig.subjects_design}
+                              onChange={(e) => setLandingPageConfig((p) => ({ ...p, subjects_design: e.target.value }))}
+                              className="w-full px-4 py-3 mt-2 text-sm border outline-none rounded-2xl border-slate-200 bg-slate-50 focus:border-primary focus:bg-white"
+                            >
+                              <option value="design1">Option 1: Rounded Floating Cards (Default)</option>
+                              <option value="design2">Option 2: Wide Glassmorphic Gradients</option>
+                              <option value="design3">Option 3: Dynamic Subject Interactive Tabs</option>
+                            </select>
+                          </label>
+
+                          {/* Features design */}
+                          <label className="block text-sm font-semibold text-slate-700">
+                            Features Section Layout
+                            <select
+                              value={landingPageConfig.features_design}
+                              onChange={(e) => setLandingPageConfig((p) => ({ ...p, features_design: e.target.value }))}
+                              className="w-full px-4 py-3 mt-2 text-sm border outline-none rounded-2xl border-slate-200 bg-slate-50 focus:border-primary focus:bg-white"
+                            >
+                              <option value="design1">Option 1: Numbered Accent Cards</option>
+                              <option value="design2">Option 2: Dynamic Alternating Bento Box</option>
+                            </select>
+                          </label>
+
+                          {/* Testimonials design */}
+                          <label className="block text-sm font-semibold text-slate-700">
+                            Testimonials Section Layout
+                            <select
+                              value={landingPageConfig.testimonials_design}
+                              onChange={(e) => setLandingPageConfig((p) => ({ ...p, testimonials_design: e.target.value }))}
+                              className="w-full px-4 py-3 mt-2 text-sm border outline-none rounded-2xl border-slate-200 bg-slate-50 focus:border-primary focus:bg-white"
+                            >
+                              <option value="design1">Option 1: Horizontal Carousel Slider</option>
+                              <option value="design2">Option 2: Masonry Grid Layout</option>
+                              <option value="design3">Option 3: Spotlight Focused Slider</option>
+                            </select>
+                          </label>
+                        </div>
+                      </div>
+
+                      {/* Submit */}
+                      <div className="flex justify-end pt-5 border-t border-slate-100">
+                        <ButtonPrimary
+                          type="submit"
+                          disabled={isSavingLandingPage}
+                          className="inline-flex items-center gap-2 py-3 text-sm font-bold rounded-full px-7 disabled:opacity-55"
+                        >
+                          {isSavingLandingPage ? (
+                            <><Loader2 size={16} className="animate-spin" /> Saving...</>
+                          ) : (
+                            <><Save size={16} /> Save Customizations</>
                           )}
                         </ButtonPrimary>
                       </div>
