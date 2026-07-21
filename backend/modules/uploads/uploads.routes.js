@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const { uploadSingleFile, UPLOAD_CONFIG, deleteUploadedFile } = require("../../middleware/fileUpload");
-const { requireUser } = require("../../middleware/auth");
+const { requireUserOrAdmin } = require("../../middleware/auth");
 
 /**
  * Upload question image
  * POST /api/v1/uploads/quiz-questions
  */
-router.post("/quiz-questions", requireUser, uploadSingleFile("quiz-questions"), (req, res) => {
+router.post("/quiz-questions", requireUserOrAdmin, uploadSingleFile("quiz-questions"), (req, res) => {
 	try {
 		if (!req.file) {
 			return res.status(400).json({
@@ -40,7 +40,7 @@ router.post("/quiz-questions", requireUser, uploadSingleFile("quiz-questions"), 
  * Upload paper PDF
  * POST /api/v1/uploads/papers
  */
-router.post("/papers", requireUser, uploadSingleFile("papers"), (req, res) => {
+router.post("/papers", requireUserOrAdmin, uploadSingleFile("papers"), (req, res) => {
 	try {
 		if (!req.file) {
 			return res.status(400).json({
@@ -73,7 +73,7 @@ router.post("/papers", requireUser, uploadSingleFile("papers"), (req, res) => {
  * Upload badge image
  * POST /api/v1/uploads/badges
  */
-router.post("/badges", requireUser, uploadSingleFile("badges"), (req, res) => {
+router.post("/badges", requireUserOrAdmin, uploadSingleFile("badges"), (req, res) => {
 	try {
 		if (!req.file) {
 			return res.status(400).json({
@@ -106,7 +106,7 @@ router.post("/badges", requireUser, uploadSingleFile("badges"), (req, res) => {
  * Upload profile picture
  * POST /api/v1/uploads/profiles
  */
-router.post("/profiles", requireUser, uploadSingleFile("profiles"), (req, res) => {
+router.post("/profiles", requireUserOrAdmin, uploadSingleFile("profiles"), (req, res) => {
 	try {
 		if (!req.file) {
 			return res.status(400).json({
@@ -139,7 +139,7 @@ router.post("/profiles", requireUser, uploadSingleFile("profiles"), (req, res) =
  * Delete uploaded file
  * DELETE /api/v1/uploads/:type/:filename
  */
-router.delete("/:type/:filename", requireUser, (req, res) => {
+router.delete("/:type/:filename", requireUserOrAdmin, (req, res) => {
 	try {
 		const { type, filename } = req.params;
 
