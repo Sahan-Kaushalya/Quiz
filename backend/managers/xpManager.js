@@ -3,7 +3,13 @@ const {
   UserLevel,
   QuizAttempt,
   UserAnswer,
+  Badge,
+  UserBadge,
+  AdventureQuest,
+  UserAdventureProgress,
+  UserDailyTrialProgress,
 } = require("../models/associations");
+const { Op } = require("sequelize");
 
 /**
  * Calculate XP for a quiz attempt
@@ -39,6 +45,9 @@ const updateUserXPAndLevel = async (userId, xpGained) => {
     // Check if user should level up
     const updatedUser = await checkAndUpdateLevel(user);
 
+    // Evaluate and award badges for new XP
+    await checkAndAwardBadges(userId, 'xp');
+
     return {
       userId: updatedUser.id,
       currentXP: updatedUser.current_xp,
@@ -67,10 +76,10 @@ const checkAndUpdateLevel = async (user) => {
       throw new Error("No levels configured in system");
     }
 
-    let newLevel = levels[0]; // Start with lowest level
+    let newLevel = levels[levels.length - 1]; // Start with lowest level
 
     // Find the appropriate level based on current XP
-    for (let i = levels.length - 1; i >= 0; i--) {
+    for (let i = 0; i < levels.length; i++) {
       if (user.current_xp >= levels[i].xp_required) {
         newLevel = levels[i];
         break;
@@ -203,6 +212,28 @@ const initializeDefaultLevels = async () => {
   }
 };
 
+const recalculateAllUserLevels = async () => {
+  try {
+    const users = await User.findAll();
+    for (const user of users) {
+      await checkAndUpdateLevel(user);
+    }
+    console.log("✓ Recalculated and repaired all user levels based on XP.");
+  } catch (err) {
+    console.error("Error recalculating user levels:", err);
+  }
+};
+
+async function checkAndAwardBadges(userId) {
+  try {
+    const badgeManager = require("./badgeManager");
+    return await badgeManager.checkAndAwardBadges(userId);
+  } catch (err) {
+    console.error("Error delegating to badgeManager.checkAndAwardBadges:", err);
+    return [];
+  }
+}
+
 module.exports = {
   calculateQuizXP,
   updateUserXPAndLevel,
@@ -210,4 +241,6 @@ module.exports = {
   getUserProgress,
   getAllLevels,
   initializeDefaultLevels,
+  recalculateAllUserLevels,
+  checkAndAwardBadges,
 };
