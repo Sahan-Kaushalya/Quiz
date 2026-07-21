@@ -12,6 +12,7 @@ import QuizResult from './pages/QuizResult';
 import PastPapers from './pages/PastPapers';
 import StudentProfile from './pages/StudentProfile';
 import LeadingPage from './pages/LeadingPage';
+import StudentAdventure from './pages/StudentAdventure';
 import ComponentLibraryDemo from './ui/ComponentLibraryDemo';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminAddPasspaper from './pages/admin/AdminAddPasspaper';
@@ -20,6 +21,7 @@ import AdminAddQuiz from './pages/admin/AdminAddQuiz';
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminSettings from './pages/admin/AdminSettings';
 import AdminAIAssistant from './pages/admin/AdminAIAssistant';
+import AdminAdventure from './pages/admin/AdminAdventure';
 import Error405Page from './pages/errors/405error';
 import Error401Page from './pages/errors/401error';
 import Error404Page from './pages/errors/404error';
@@ -66,6 +68,7 @@ function PageTitleManager() {
       '/login': 'Student Login | Quiz Master',
       '/forgot-password': 'Forgot Password | Quiz Master',
       '/reset-password': 'Reset Password | Quiz Master',
+      '/adventure': 'Adventure Map | Quiz Master',
       '/dashboard': 'Dashboard | Quiz Master',
       '/quizzes': 'Quiz Quest | Quiz Master',
       '/quiz-card': 'Mission Attempt | Quiz Master',
@@ -80,6 +83,7 @@ function PageTitleManager() {
       '/admin/quizzes': 'Manage Quizzes | Quiz Master',
       '/admin/settings': 'Settings | Quiz Master',
       '/admin/ai-assistant': 'AI Assistant | Quiz Master',
+      '/admin/adventure': 'Manage Adventure | Quiz Master',
       '/403': 'Access Denied | Quiz Master',
     };
 
@@ -161,6 +165,14 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/adventure"
+          element={
+            <ProtectedRoute>
+              <StudentAdventure />
+            </ProtectedRoute>
+          }
+        />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route
           path="/admin/dashboard"
@@ -207,6 +219,14 @@ function App() {
           element={
             <AdminProtectedRoute>
               <AdminAIAssistant />
+            </AdminProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/adventure"
+          element={
+            <AdminProtectedRoute>
+              <AdminAdventure />
             </AdminProtectedRoute>
           }
         />
