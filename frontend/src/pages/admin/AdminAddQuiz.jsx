@@ -19,6 +19,7 @@ import {
   Loader2,
   Calendar,
   Award,
+  Map,
 } from 'lucide-react';
 import Footer from '../../ui/Footer';
 import { AdminHeader, AdminSidebar, ButtonPrimary, Card, ToastContainer, useToast } from '../../ui';
@@ -30,6 +31,7 @@ const NAV_ITEMS = [
   { label: 'Quizzes', icon: FileText, to: '/admin/quizzes', active: true },
   { label: 'Past Papers', icon: ShieldCheck, to: '/admin/past-papers' },
   { label: 'Users', icon: Users, to: '/admin/users' },
+  { label: 'Adventure', icon: Map, to: '/admin/adventure' },
   { label: 'AI Assistant', icon: Sparkles, to: '/admin/ai-assistant' },
   { label: 'Settings', icon: Settings, to: '/admin/settings' },
 ];
