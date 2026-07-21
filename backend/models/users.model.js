@@ -77,6 +77,15 @@ const User = sequelize.define(
 			onUpdate: "CASCADE",
 			onDelete: "RESTRICT",
 		},
+		hearts: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
+			defaultValue: 3,
+		},
+		last_heart_lost_at: {
+			type: DataTypes.DATE,
+			allowNull: true,
+		},
 	},
 	{
 		tableName: "users",
