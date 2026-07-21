@@ -11,7 +11,9 @@ const {
   submitDailyTrial,
   getDailyBonusStatus,
   claimDailyBonus,
-  getAdventureLeaderboard
+  getAdventureLeaderboard,
+  getHearts,
+  deductHeart
 } = require("./controllers/adventure.controller");
 const { requireUser, requireUserOrAdmin } = require("../../middleware/auth");
 const { uploadMultipleFiles } = require("../../middleware/fileUpload");
@@ -60,5 +62,7 @@ applicationRoutes.post("/adventure/daily-trials/:id/submit", requireUser, submit
 applicationRoutes.get("/adventure/daily-bonus", requireUser, getDailyBonusStatus);
 applicationRoutes.post("/adventure/daily-bonus/claim", requireUser, claimDailyBonus);
 applicationRoutes.get("/adventure/leaderboard", requireUser, getAdventureLeaderboard);
+applicationRoutes.get("/adventure/hearts", requireUser, getHearts);
+applicationRoutes.post("/adventure/hearts/deduct", requireUser, deductHeart);
 
 module.exports = applicationRoutes;

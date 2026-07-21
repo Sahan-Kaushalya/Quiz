@@ -23,6 +23,7 @@ const DailyTrial = require("./dailyTrial.model");
 const UserAdventureProgress = require("./userAdventureProgress.model");
 const UserDailyTrialProgress = require("./userDailyTrialProgress.model");
 const UserDailyBonus = require("./userDailyBonus.model");
+const Zone = require("./zone.model");
 
 // Grade - User relationship
 Grade.hasMany(User, {
@@ -416,6 +417,17 @@ UserDailyTrialProgress.belongsTo(DailyTrial, {
   as: "trial",
 });
 
+// Zone - AdventureQuest relationship
+Zone.hasMany(AdventureQuest, {
+  foreignKey: "zone_id",
+  as: "quests",
+  onDelete: "CASCADE",
+});
+AdventureQuest.belongsTo(Zone, {
+  foreignKey: "zone_id",
+  as: "zone",
+});
+
 module.exports = {
   Grade,
   User,
@@ -442,4 +454,5 @@ module.exports = {
   UserAdventureProgress,
   UserDailyTrialProgress,
   UserDailyBonus,
+  Zone,
 };

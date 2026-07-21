@@ -4,7 +4,7 @@ const { getAllUsers, createUser, updateUser, deleteUser, getUserPerformance, get
 const { getAllQuizzes, createQuiz, updateQuiz, deleteQuiz } = require("./controllers/adminQuiz.controller");
 const { getAdminProfile, updateAdminProfile, changeAdminPassword, getOpenRouterKey, updateOpenRouterKey, updateLandingPageConfig } = require("./controllers/adminSettings.controller");
 const { generateQuizFromAI, chatWithAI } = require("./controllers/adminAI.controller");
-const { createAdventureQuest, createDailyTrial, getAdventureQuestsAdmin, getDailyTrialsAdmin } = require("./controllers/adminAdventure.controller");
+const { createAdventureQuest, createDailyTrial, getAdventureQuestsAdmin, getDailyTrialsAdmin, updateAdventureQuest, deleteAdventureQuest, toggleAdventureQuestActive, getBadgesAdmin, createBadgeAdmin, updateBadgeAdmin, deleteBadgeAdmin, awardBadgeToUserAdmin, getZonesAdmin, createZoneAdmin, updateZoneAdmin, deleteZoneAdmin, toggleZoneActiveAdmin } = require("./controllers/adminAdventure.controller");
 const { requireAdmin } = require("../../middleware/auth");
 const { uploadSingleFile, uploadMultipleFiles, UPLOAD_CONFIG } = require("../../middleware/fileUpload");
 
@@ -73,7 +73,24 @@ adminRoutes.post("/quizzes/upload-image", requireAdmin, uploadSingleFile("quiz-q
 // Admin Adventure Routes
 adminRoutes.get("/adventure/quests", requireAdmin, getAdventureQuestsAdmin);
 adminRoutes.post("/adventure/quests", requireAdmin, createAdventureQuest);
+adminRoutes.put("/adventure/quests/:id", requireAdmin, updateAdventureQuest);
+adminRoutes.delete("/adventure/quests/:id", requireAdmin, deleteAdventureQuest);
+adminRoutes.put("/adventure/quests/:id/toggle-active", requireAdmin, toggleAdventureQuestActive);
 adminRoutes.get("/adventure/daily-trials", requireAdmin, getDailyTrialsAdmin);
 adminRoutes.post("/adventure/daily-trials", requireAdmin, createDailyTrial);
+
+// Admin Badge Routes
+adminRoutes.get("/adventure/badges", requireAdmin, getBadgesAdmin);
+adminRoutes.post("/adventure/badges", requireAdmin, createBadgeAdmin);
+adminRoutes.put("/adventure/badges/:id", requireAdmin, updateBadgeAdmin);
+adminRoutes.delete("/adventure/badges/:id", requireAdmin, deleteBadgeAdmin);
+adminRoutes.post("/adventure/badges/:id/award", requireAdmin, awardBadgeToUserAdmin);
+
+// Admin Zone Routes
+adminRoutes.get("/adventure/zones", requireAdmin, getZonesAdmin);
+adminRoutes.post("/adventure/zones", requireAdmin, createZoneAdmin);
+adminRoutes.put("/adventure/zones/:id", requireAdmin, updateZoneAdmin);
+adminRoutes.delete("/adventure/zones/:id", requireAdmin, deleteZoneAdmin);
+adminRoutes.put("/adventure/zones/:id/toggle-active", requireAdmin, toggleZoneActiveAdmin);
 
 module.exports = adminRoutes;

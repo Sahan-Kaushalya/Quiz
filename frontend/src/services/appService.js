@@ -434,3 +434,41 @@ export async function getAdventureLeaderboard() {
 
   return response.json();
 }
+
+export async function getHearts() {
+  const session = getAuthSession();
+  const headers = { "Content-Type": "application/json" };
+  if (session?.tokens?.accessToken) {
+    headers["Authorization"] = `Bearer ${session.tokens.accessToken}`;
+  }
+
+  const response = await fetch(`${API_BASE_URL}/app/adventure/hearts`, {
+    method: "GET",
+    headers,
+  });
+
+  if (!response.ok) {
+    return parseErrorResponse(response);
+  }
+
+  return response.json();
+}
+
+export async function deductHeart() {
+  const session = getAuthSession();
+  const headers = { "Content-Type": "application/json" };
+  if (session?.tokens?.accessToken) {
+    headers["Authorization"] = `Bearer ${session.tokens.accessToken}`;
+  }
+
+  const response = await fetch(`${API_BASE_URL}/app/adventure/hearts/deduct`, {
+    method: "POST",
+    headers,
+  });
+
+  if (!response.ok) {
+    return parseErrorResponse(response);
+  }
+
+  return response.json();
+}
