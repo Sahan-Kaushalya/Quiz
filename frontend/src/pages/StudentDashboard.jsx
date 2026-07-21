@@ -34,6 +34,7 @@ const NAV_ITEMS = [
   { label: 'Dashboard', icon: LayoutDashboard, active: true },
   { label: 'Quizzes', icon: BookOpen, to: '/quizzes' },
   { label: 'Past Papers', icon: FileText, to: '/past-papers' },
+  { label: 'Adventure', icon: Map, to: '/adventure' },
   { label: 'Leading', icon: Trophy, to: '/leading' },
   { label: 'Profile', icon: CircleUser, to: '/profile' },
 ];
@@ -296,15 +297,20 @@ export default function StudentDashboard() {
     return `https://api.dicebear.com/9.x/initials/svg?seed=${initials}&background=%23ffffff`;
   };
 
-  const getBadgeImageUrl = (iconUrl) => {
+  const getBadgeImageUrl = (iconUrl, seedName = 'badge') => {
     const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api/v1";
-    if (iconUrl) {
-      if (iconUrl.startsWith('/')) {
-        return `${API_BASE_URL}/uploads${iconUrl}`;
-      }
-      return iconUrl;
+    if (!iconUrl) return `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(seedName)}`;
+    if (iconUrl.startsWith('http://') || iconUrl.startsWith('https://')) return iconUrl;
+    if (iconUrl.startsWith('/api/v1/uploads/')) {
+      return `${API_BASE_URL.replace('/api/v1', '')}${iconUrl}`;
     }
-    return '';
+    if (iconUrl.startsWith('/uploads/')) {
+      return `${API_BASE_URL.replace('/api/v1', '')}/api/v1${iconUrl}`;
+    }
+    if (iconUrl.startsWith('/badges/')) {
+      return `${API_BASE_URL}/uploads${iconUrl}`;
+    }
+    return `${API_BASE_URL}/uploads/badges/${iconUrl}`;
   };
 
   const handleGo = () => {
@@ -542,7 +548,7 @@ export default function StudentDashboard() {
                       <div className={`flex h-12 md:h-14 w-12 md:w-14 shrink-0 items-center justify-center rounded-full border-2 ${styles.bg} ${styles.border} transition-transform group-hover:scale-10 overflow-hidden`}>
                         {badge.icon_url ? (
                           <img
-                            src={getBadgeImageUrl(badge.icon_url)}
+                            src={getBadgeImageUrl(badge.icon_url, badge.name)}
                             alt={badge.name}
                             className="w-20 h-20 object-contain"
                           />
