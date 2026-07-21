@@ -142,6 +142,90 @@ const checkBadgeCriteria = async (user, badge) => {
 	const { QuizAttempt, UserPaperBookmark, UserPaperProgress } = require("../models/associations");
 
 	try {
+		// Dynamic badge configuration criteria checks
+		if (badge.target_type && badge.target_type !== "none") {
+			const { AdventureQuest, UserAdventureProgress, UserDailyTrialProgress } = require("../models/associations");
+			const targetType = badge.target_type;
+			const targetValue = badge.target_value;
+
+			if (targetType === "xp") {
+				const threshold = Number(targetValue);
+				return user.current_xp >= threshold;
+			}
+
+			if (targetType === "quest") {
+				const questId = Number(targetValue);
+				const completed = await UserAdventureProgress.findOne({
+					where: { user_id: user.id, quest_id: questId, status: "completed" }
+				});
+				return !!completed;
+			}
+
+			if (targetType === "zone") {
+				const questsInZone = await AdventureQuest.findAll({
+					where: { zone_id: targetValue, is_active: true }
+				});
+				const questIds = questsInZone.map(q => q.id);
+				if (questIds.length === 0) return false;
+
+				const completedCount = await UserAdventureProgress.count({
+					where: { user_id: user.id, quest_id: { [Op.in]: questIds }, status: "completed" }
+				});
+				return completedCount === questsInZone.length;
+			}
+
+			if (targetType === "daily_trial" || targetType === "daily_trial_count") {
+				const threshold = Number(targetValue);
+				const completedCount = await UserDailyTrialProgress.count({
+					where: { user_id: user.id }
+				});
+				return completedCount >= threshold;
+			}
+
+			if (targetType === "quiz") {
+				const quizId = Number(targetValue);
+				const attempts = await QuizAttempt.findAll({
+					where: { user_id: user.id, quiz_id: quizId, is_completed: true }
+				});
+				return attempts.some(att => {
+					const scorePct = (att.correct_answers / att.total_questions) * 100;
+					const timeTakenSec = att.completed_at && att.started_at
+						? (new Date(att.completed_at) - new Date(att.started_at)) / 1000
+						: null;
+					
+					const scoreOk = badge.score_limit ? scorePct >= badge.score_limit : true;
+					const timeOk = badge.time_limit && timeTakenSec ? timeTakenSec <= badge.time_limit : true;
+					return scoreOk && timeOk;
+				});
+			}
+
+			if (targetType === "quiz_count") {
+				const threshold = Number(targetValue);
+				const attempts = await QuizAttempt.findAll({
+					where: { user_id: user.id, is_completed: true }
+				});
+				const qualifyingCount = attempts.filter(att => {
+					const scorePct = (att.correct_answers / att.total_questions) * 100;
+					const timeTakenSec = att.completed_at && att.started_at
+						? (new Date(att.completed_at) - new Date(att.started_at)) / 1000
+						: null;
+					
+					const scoreOk = badge.score_limit ? scorePct >= badge.score_limit : true;
+					const timeOk = badge.time_limit && timeTakenSec ? timeTakenSec <= badge.time_limit : true;
+					return scoreOk && timeOk;
+				}).length;
+				return qualifyingCount >= threshold;
+			}
+
+			if (targetType === "adventure_count") {
+				const threshold = Number(targetValue);
+				const completedCount = await UserAdventureProgress.count({
+					where: { user_id: user.id, status: "completed" }
+				});
+				return completedCount >= threshold;
+			}
+		}
+
 		// Milestones based on XP / Levels / Bookmarks / Downloads
 		if (badge.badge_type === "milestone") {
 			// Level milestones check: Starter Badge, Rookie Badge, Learner Badge, etc.
